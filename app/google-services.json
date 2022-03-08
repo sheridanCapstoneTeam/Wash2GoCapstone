@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "942246488668",
+    "project_id": "wash2goproject",
+    "storage_bucket": "wash2goproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:942246488668:android:df94317ef30ecb1d4c9499",
+        "android_client_info": {
+          "package_name": "project.sheridancollege.wash2goproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "942246488668-5ol72k6nt0t3ebv3o4upu6uaqr6c9r3v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBPUUaa4wm4h7dvkhzP4xaR-1MeePWmJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "942246488668-5ol72k6nt0t3ebv3o4upu6uaqr6c9r3v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
