@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
+
         mGoogleSignInClient= GoogleSignIn.getClient(this,gso)
 // pass the same server client ID used while implementing the LogIn feature earlier.
         val btnLogout : Button = findViewById(R.id.btnlogout)
