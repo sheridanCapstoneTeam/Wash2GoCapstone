@@ -26,11 +26,8 @@ class MainActivity : AppCompatActivity() {
 
         //RAMA
         //retriving the current user iauto generated id
-        val intent = getIntent()
-        val currentUserId = intent.getStringExtra("currentUserId")
-        Toast.makeText(
-            this, currentUserId, Toast.LENGTH_LONG
-        ).show()
+        //val intent = getIntent()
+        //val currentUserId = intent.getStringExtra("currentUserId")
 
 
 

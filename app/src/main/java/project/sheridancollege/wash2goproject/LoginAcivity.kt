@@ -97,9 +97,12 @@ class LoginAcivity : AppCompatActivity() {
                             MainActivity::class.java)
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 or Intent.FLAG_ACTIVITY_NEW_TASK)
-                        var currentUserId = mAuth.currentUser?.uid
-                        intent.putExtra("currentUserId" , currentUserId)
+// EXTER UID FOR USER
+                        //var currentUserId = mAuth.currentUser?.uid
+                        //intent.putExtra("currentUserId" , currentUserId)
                         startActivity(intent)
+
+
                     }else {
                         Toast.makeText(
                             this, "sorry something went wrong!", Toast.LENGTH_LONG
