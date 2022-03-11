@@ -22,22 +22,14 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        val btn:TextView = findViewById(R.id.alreadyHaveAccount)
+
         val btnRegister:Button = findViewById(R.id.btnRegister)
-          mAuth = FirebaseAuth.getInstance()
+        mAuth = FirebaseAuth.getInstance()
 
         btnRegister.setOnClickListener {
             checkCredentials();
         }
-        btn.setOnClickListener {
 
-                val intent = Intent(this@RegisterActivity,
-                    LoginAcivity::class.java)
-
-                startActivity(intent)
-
-
-        }
     }
 
     private fun checkCredentials(){
@@ -51,14 +43,15 @@ class RegisterActivity : AppCompatActivity() {
         val inputConformPass = conformPassword.text.toString()
 
         if(userName.isEmpty() || userName.length > 30) {
-           showError(username,"your Name is not valid")
+            showError(username,"your Name is not valid")
         } else if (inputEmail.isEmpty() || !inputEmail.contains("@")){
             showError(email,"Enter a valid email")
         }else if (inputPass.isEmpty() || inputPass.length < 7){
-          showError(password,"Password must be 7 character")
+            showError(password,"Password must be 7 character")
         }else if (inputConformPass.isEmpty() || !inputConformPass.equals(inputPass)){
             showError(conformPassword ,"password not Match")
         }else {
+            //Add the user to the authentication list000
             mAuth.createUserWithEmailAndPassword(inputEmail, inputPass)
                 .addOnCompleteListener { task: Task<AuthResult> ->
                     if(task.isSuccessful){
@@ -75,6 +68,7 @@ class RegisterActivity : AppCompatActivity() {
                             this, "sorry something went wrong!", Toast.LENGTH_LONG
                         ).show()
                     }
+
 
                 }
         }

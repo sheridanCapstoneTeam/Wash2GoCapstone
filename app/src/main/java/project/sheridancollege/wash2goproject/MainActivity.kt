@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -11,7 +12,9 @@ import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
     lateinit var mGoogleSignInClient: GoogleSignInClient
-    private lateinit var mAuth: FirebaseAuth;
+    private lateinit var mAuth: FirebaseAuth
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -20,7 +23,22 @@ class MainActivity : AppCompatActivity() {
             .requestEmail()
             .build()
 
+
+        //RAMA
+        //retriving the current user iauto generated id
+        val intent = getIntent()
+        val currentUserId = intent.getStringExtra("currentUserId")
+        Toast.makeText(
+            this, currentUserId, Toast.LENGTH_LONG
+        ).show()
+
+
+
+
+
         mGoogleSignInClient= GoogleSignIn.getClient(this,gso)
+
+
 // pass the same server client ID used while implementing the LogIn feature earlier.
         val btnLogout : Button = findViewById(R.id.btnlogout)
         mAuth = FirebaseAuth.getInstance()
