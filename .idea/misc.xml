@@ -8,10 +8,14 @@
         <entry key="..\:/Users/ramaa/Desktop/Winter-2022/capstone/Project/Wash2GoCapstone/app/src/main/res/layout/activity_register.xml" value="0.264" />
         <entry key="app/src/main/res/drawable/btn_ng.xml" value="0.1995" />
         <entry key="app/src/main/res/drawable/ic__021_facebook_icon.xml" value="0.16" />
+        <entry key="app/src/main/res/drawable/ic_refresh.xml" value="0.1345" />
+        <entry key="app/src/main/res/drawable/ic_run.xml" value="0.1345" />
         <entry key="app/src/main/res/drawable/input_bg.xml" value="0.222" />
         <entry key="app/src/main/res/layout/activity_login_acivity.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_maps.xml" value="0.20625" />
+        <entry key="app/src/main/res/layout/fragment_permission.xml" value="0.13425925925925927" />
       </map>
     </option>
   </component>
