@@ -16,14 +16,14 @@
         android:layout_width="317dp"
         android:layout_height="204dp"
         android:layout_marginBottom="100dp"
-        android:src="@drawable/location"
+        android:src="@drawable/location2"
         app:layout_constraintBottom_toTopOf="@+id/welcome_textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
-        tools:srcCompat="@drawable/location" />
+         />
 
     <TextView
         android:id="@+id/welcome_textView"

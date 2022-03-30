@@ -1,16 +1,19 @@
 package project.sheridancollege.wash2goproject.ui.maps
 
 import android.annotation.SuppressLint
+import android.app.NotificationManager
 import android.content.Intent
 import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -21,9 +24,11 @@ import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import project.sheridancollege.wash2goproject.ProviderLocation
 import project.sheridancollege.wash2goproject.R
 import project.sheridancollege.wash2goproject.databinding.FragmentMapsBinding
 import project.sheridancollege.wash2goproject.service.TrackerService
+import project.sheridancollege.wash2goproject.util.Constants
 import project.sheridancollege.wash2goproject.util.Constants.ACTION_SERVICE_START
 import project.sheridancollege.wash2goproject.util.Constants.ACTION_SERVICE_STOP
 import project.sheridancollege.wash2goproject.util.ExtensionFunctions.disabled
@@ -32,31 +37,69 @@ import project.sheridancollege.wash2goproject.util.ExtensionFunctions.hide
 import project.sheridancollege.wash2goproject.util.ExtensionFunctions.show
 import project.sheridancollege.wash2goproject.util.Permission.hasBackgroundLocationPermission
 import project.sheridancollege.wash2goproject.util.Permission.requestBackgroundLocationPermission
+import javax.inject.Inject
 
 
-class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, EasyPermissions.PermissionCallbacks{
+class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, EasyPermissions.PermissionCallbacks
+{
+    @Inject
+    lateinit var notification: NotificationCompat.Builder
+
+    @Inject
+    lateinit var notificationManager: NotificationManager
+    var providerLocaion: HashMap<String, ProviderLocation> = HashMap()
+    var customerLocaion: HashMap<String, ProviderLocation> = HashMap() //change type from provider to customer
 
     private val POLYLINE_STROKE_WIDTH_PX = 12
     private var _binding: FragmentMapsBinding? = null
     private val binding get() = _binding!!
     private lateinit var map: GoogleMap
 
+
     private var startTime = 0L
     private var stopTime = 0L
 
     //observe this list from our tracker service
     private var locationList = mutableListOf<LatLng>()
+    //private var providerNearByLocation = mutableListOf<LatLng>()
+    private lateinit var mlocation: Location
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+
+        providerLocaion.put("1", ProviderLocation(43.9675, -79.6877))
+        providerLocaion.put("2", ProviderLocation(43.6125, -79.6573))
+        providerLocaion.put("3", ProviderLocation(43.5512, -79.7206))
+        providerLocaion.put("4", ProviderLocation(43.7162, -79.7426))
+
+        customerLocaion.put("1", ProviderLocation(43.4621, -79.6899))
+
+
         // Inflate the layout for this fragment
      _binding = FragmentMapsBinding.inflate(inflater, container, false)
 
         binding.startBtn.setOnClickListener {
             onStartButtonClicked()
-
+            var arrayOfResult: ArrayList<Double> = ArrayList<Double>()
+            print("Hello world!")
+            for ((key, value) in providerLocaion) {
+                println("$key = $value")
+               var listOfCustomerAndProvider: MutableList<LatLng> =
+                   MapUtil.createAlocalList(value.lat, value.lng,
+                       customerLocaion.get("1")!!.lat, customerLocaion.get("1")!!.lng)
+                var result = MapUtil.calculateTheDistance(listOfCustomerAndProvider)
+                print("This is the result" + result.toDouble())
+                arrayOfResult.add(result.toDouble())
+            }
+            print("This is a list")
+            print(arrayOfResult)
+          var nearestLoaction = arrayOfResult.minByOrNull { it }!!
+            print("the samllest " + nearestLoaction)
+            binding.resultTextView.text = "provider is " +
+                    nearestLoaction.toString() + " km away"
         }
 
         binding.stopBtn.setOnClickListener {
@@ -69,7 +112,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
 
         return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -86,6 +128,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
                 .position(latLng)
                 .title("I am here")
         )
+
         map.isMyLocationEnabled = true
         map.setOnMyLocationButtonClickListener(this)
         map.uiSettings.apply {
@@ -98,6 +141,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
 
         observeTrackerService()
     }
+
+
 
     private fun observeTrackerService(){
         TrackerService.locationList.observe(viewLifecycleOwner) {
@@ -131,6 +176,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
              addAll(locationList)
          }
         )
+
     }
 //this function will set the camera position everytime we receive a new location
     //and for camera postion will choose last location in the locationlist
@@ -236,8 +282,25 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         }
         return false
     }
+//    fun displayNotification(value: Double){
+//        notification.apply {
+//            setContentTitle("Distance Travelled")
+//            setContentText(value.toString() + "km")
+//        }
+//        notificationManager.notify(Constants.NOTIFICATION_ID, notification.build())
+//    }
     override fun onDestroyView() { //to avoid memory leaks
         super.onDestroyView()
         _binding = null
     }
+
+//    override fun onLocationChanged(location: Location) {
+//        mlocation = location
+//        var latLng : LatLng = LatLng(location.latitude, location.longitude)
+//        map.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+//        val userid = FirebaseAuth.getInstance().currentUser?.providerId
+//       geoFire.setLocation(userid, GeoLocation(location.latitude, location.longitude))
+//    }
+
 }
+

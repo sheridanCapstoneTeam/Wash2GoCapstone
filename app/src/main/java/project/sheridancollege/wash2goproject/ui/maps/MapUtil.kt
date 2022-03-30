@@ -7,6 +7,7 @@ import java.text.DecimalFormat
 
 object MapUtil {
 
+
     fun setCameraPosition(location:LatLng): CameraPosition{
         return CameraPosition.Builder()
             .target(location)
@@ -37,5 +38,17 @@ object MapUtil {
             return DecimalFormat("#.##").format(kilometers)
         }
         return "0.00"
+    }
+
+    fun createAlocalList(lat:Double, lng:Double, latC:Double, lngC: Double)
+    : MutableList<LatLng>{
+
+        val localList = mutableListOf<LatLng>()
+        val newLatLng = LatLng(lat, lng)
+        val latLngC = LatLng(latC, lngC)
+        localList.add(0, newLatLng)
+        localList.add(1,  latLngC)
+
+        return localList
     }
 }
