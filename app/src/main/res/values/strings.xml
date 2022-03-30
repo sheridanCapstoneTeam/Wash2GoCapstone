@@ -8,4 +8,7 @@
     .apps.googleusercontent.com"</string> -->
     <!--    <string name="google_maps_key" translatable="false">AIzaSyBcNe5mLxKAaeJSmsFz0F2E7jd-SmO_v5o</string>-->
     <string name="permission_description"> Welcome to Wash2Go car detailing application. In order to use our service, we will first need to request location permission from you.please click the button below if you agree and wish to continue, otherwise, we are sorry we won\'t be able to provide you with our services</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">password</string>
 </resources>

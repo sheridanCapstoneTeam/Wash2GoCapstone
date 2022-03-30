@@ -1,6 +1,8 @@
 package project.sheridancollege.wash2goproject.ui
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.location.LocationRequest
 import android.os.Bundle
 import android.widget.Button
@@ -20,6 +22,7 @@ import project.sheridancollege.wash2goproject.util.Permission.hasLocationPermiss
 
 
 class MainActivity : AppCompatActivity() {
+
     lateinit var mGoogleSignInClient: GoogleSignInClient
     private lateinit var mAuth: FirebaseAuth
     private var isPermissionGranted = false
@@ -39,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         if(hasLocationPermission(this)){
             navController.navigate(R.id.action_permissionFragment_to_mapsFragment)
         }
+
 
 //        fusedLocationClient =
 //            LocationServices.getFusedLocationProviderClient(this)
