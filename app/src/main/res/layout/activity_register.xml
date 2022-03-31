@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_a"
+    android:background="@drawable/background"
     android:focusable="auto"
     tools:context=".RegisterActivity">
 
@@ -307,7 +307,7 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/wash2gologo" />
+        app:srcCompat="@drawable/applogo" />
 
     <!--   <ImageView
            android:id="@+id/imageView2"
