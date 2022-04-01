@@ -51,6 +51,12 @@
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".util.coorActivity"
+            android:exported="false" />
+
+
         <activity android:name=".ui.MainActivity"></activity>
 
         <uses-library

@@ -23,6 +23,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import project.sheridancollege.wash2goproject.ui.MainActivity
+import project.sheridancollege.wash2goproject.util.coorActivity
 
 
 class LoginAcivity : AppCompatActivity() {
@@ -93,7 +94,7 @@ class LoginAcivity : AppCompatActivity() {
 
                         val firebaseUser = this.mAuth.currentUser!!
                         val intent = Intent(this@LoginAcivity,
-                            MainActivity::class.java)
+                            coorActivity::class.java)
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 or Intent.FLAG_ACTIVITY_NEW_TASK)
 // EXTER UID FOR USER
