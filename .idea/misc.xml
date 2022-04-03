@@ -3,6 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Muhammad/AndroidStudioProjects/Wash2GoCapstone/app/src/main/res/drawable/blue_border_rounded_cornwe.xml" value="0.1855" />
+        <entry key="..\:/Users/Muhammad/AndroidStudioProjects/Wash2GoCapstone/app/src/main/res/drawable/cursor_color.xml" value="0.1855" />
+        <entry key="..\:/Users/Muhammad/AndroidStudioProjects/Wash2GoCapstone/app/src/main/res/drawable/dark_blue_rounded_corner.xml" value="0.1855" />
+        <entry key="..\:/Users/Muhammad/AndroidStudioProjects/Wash2GoCapstone/app/src/main/res/drawable/ic_email.xml" value="0.334" />
+        <entry key="..\:/Users/Muhammad/AndroidStudioProjects/Wash2GoCapstone/app/src/main/res/drawable/ic_google_logo.xml" value="0.334" />
+        <entry key="..\:/Users/Muhammad/AndroidStudioProjects/Wash2GoCapstone/app/src/main/res/drawable/ic_person.xml" value="0.334" />
+        <entry key="..\:/Users/Muhammad/AndroidStudioProjects/Wash2GoCapstone/app/src/main/res/layout/activity_login_acivity.xml" value="0.1" />
+        <entry key="..\:/Users/Muhammad/AndroidStudioProjects/Wash2GoCapstone/app/src/main/res/layout/activity_register.xml" value="0.33" />
         <entry key="..\:/Users/ramaa/Desktop/Winter-2022/capstone/Project/Wash2GoCapstone/app/src/main/res/layout/activity_login_acivity.xml" value="0.264" />
         <entry key="..\:/Users/ramaa/Desktop/Winter-2022/capstone/Project/Wash2GoCapstone/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/ramaa/Desktop/Winter-2022/capstone/Project/Wash2GoCapstone/app/src/main/res/layout/activity_register.xml" value="0.264" />
