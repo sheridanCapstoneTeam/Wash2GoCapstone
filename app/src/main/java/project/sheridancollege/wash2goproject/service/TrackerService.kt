@@ -6,22 +6,13 @@ import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.location.Location
 import android.os.Build
 import android.os.Looper
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import androidx.core.location.LocationManagerCompat.requestLocationUpdates
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
-import com.firebase.geofire.GeoFire
-import com.firebase.geofire.GeoLocation
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import dagger.hilt.android.AndroidEntryPoint
 import project.sheridancollege.wash2goproject.util.Constants.ACTION_SERVICE_START
 import project.sheridancollege.wash2goproject.util.Constants.ACTION_SERVICE_STOP
@@ -31,20 +22,13 @@ import project.sheridancollege.wash2goproject.util.Constants.NOTIFICATION_CHANNE
 import project.sheridancollege.wash2goproject.util.Constants.NOTIFICATION_CHANNEL_NAME
 import project.sheridancollege.wash2goproject.util.Constants.NOTIFICATION_ID
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
-import project.sheridancollege.wash2goproject.R
 import project.sheridancollege.wash2goproject.ui.maps.MapUtil
-import project.sheridancollege.wash2goproject.ui.maps.MapsFragment
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class TrackerService: LifecycleService() {
+
+
 
     @Inject
     lateinit var notification: NotificationCompat.Builder
@@ -98,7 +82,7 @@ class TrackerService: LifecycleService() {
         stopTime.postValue(0L)
     }
 
-    private fun updateLocationList(location: Location){
+    public fun updateLocationList(location: Location){
         val newLatLng = LatLng(location.latitude, location.longitude)
         locationList.value?.apply {
             add(newLatLng)

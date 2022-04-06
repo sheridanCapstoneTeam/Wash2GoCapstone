@@ -1,18 +1,18 @@
 package project.sheridancollege.wash2goproject
 
-import com.google.android.gms.maps.model.LatLng
-
 class ProviderLocation {
 
-    public var lat: Double
+    public var lat: Double = 0.0
+    public var lng : Double = 0.0
 
 
-    public var lng : Double
-
-
-    constructor(lat: Double, lng: Double){
-        this.lat = lat
-        this.lng = lng
+    constructor(lat: Double?, lng: Double?){
+        if (lat != null) {
+            this.lat = lat
+        }
+        if (lng != null) {
+            this.lng = lng
+        }
 
     }
 }

@@ -68,6 +68,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-config-ktx'
     implementation 'com.google.firebase:firebase-database-ktx:20.0.4'
     implementation 'com.google.firebase:firebase-core:20.1.0'
+    implementation 'com.google.maps:google-maps-services:0.2.11'
+
     //viewModel and live data
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
