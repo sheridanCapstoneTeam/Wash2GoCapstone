@@ -28,13 +28,12 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class TrackerService: LifecycleService() {
 
-
-
     @Inject
     lateinit var notification: NotificationCompat.Builder
 
     @Inject
     lateinit var notificationManager: NotificationManager
+
 
     private lateinit var fusedLocationProviderClient : FusedLocationProviderClient
 
@@ -51,7 +50,7 @@ class TrackerService: LifecycleService() {
     private val locationCallback = object : LocationCallback(){
         override fun onLocationResult(result: LocationResult) {
             super.onLocationResult(result)
-            result.locations.let { locations ->
+            result?.locations.let { locations ->
                 for(location in locations){
                     updateLocationList(location)
                     updateNotificationPeriodically()
@@ -140,7 +139,7 @@ class TrackerService: LifecycleService() {
     @SuppressLint("MissingPermission")
     private fun startLocationUpdates(){
         val locationRequest = LocationRequest.create().apply {
-            interval = LOCATION_UPDATE_INTERVAL.toLong()
+            interval = LOCATION_UPDATE_INTERVAL.toLong() //on which we want to receive location update // LOCATION_UPDATE_INTERVAL = 4 seconds
             fastestInterval = LOCATION_FASTEST_UPDATE_INTERVAL.toLong()
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
