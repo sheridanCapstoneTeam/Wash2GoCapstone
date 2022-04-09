@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,29 +44,29 @@ public class coorActivity extends AppCompatActivity {
         edtAddress = (EditText) findViewById(R.id.edtAddress);
         txtCoordinates = (TextView) findViewById(R.id.txtCoordinates);
         btnShowCoor = (Button) findViewById(R.id.btnShowCoor);
-        mapsBtn = (Button) findViewById(R.id.mapBtn);
+
 
         btnShowCoor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new GetCoordinates().execute(edtAddress.getText().toString().replace(" ","+"));
+                new GetCoordinates().execute(edtAddress.getText().toString().replace(" ", "+"));
             }
         });
 
 
-        mapsBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(coorActivity.this, MainActivity.class );
-                //intent.putExtra(EXTRA_MESSAGELot, loc.getLatitude());
-                //intent.putExtra(EXTRA_MESSAGELng, loc.getLongitude() );
-                startActivity(intent);
-            }
-        });
+//        mapsBtn.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(coorActivity.this, MainActivity.class );
+//                //intent.putExtra(EXTRA_MESSAGELot, loc.getLatitude());
+//                //intent.putExtra(EXTRA_MESSAGELng, loc.getLongitude() );
+//                startActivity(intent);
+//            }
+//        });
+//
+//    }
 
     }
-
-
 
 
 
@@ -134,6 +135,7 @@ public class coorActivity extends AppCompatActivity {
                 Intent intent = new Intent(coorActivity.this, MainActivity.class );
                 intent.putExtra(EXTRA_MESSAGELot, loc.getLatitude());
                 intent.putExtra(EXTRA_MESSAGELng, loc.getLongitude() );
+                Log.d("TAG","Sent Cor: "+loc.getLatitude()+", "+loc.getLongitude());
                 startActivity(intent);
 
 

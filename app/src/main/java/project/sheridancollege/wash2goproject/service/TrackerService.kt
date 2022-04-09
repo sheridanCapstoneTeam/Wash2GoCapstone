@@ -1,18 +1,25 @@
 package project.sheridancollege.wash2goproject.service
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
 import android.os.Looper
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import dagger.hilt.android.AndroidEntryPoint
 import project.sheridancollege.wash2goproject.util.Constants.ACTION_SERVICE_START
 import project.sheridancollege.wash2goproject.util.Constants.ACTION_SERVICE_STOP
@@ -22,7 +29,10 @@ import project.sheridancollege.wash2goproject.util.Constants.NOTIFICATION_CHANNE
 import project.sheridancollege.wash2goproject.util.Constants.NOTIFICATION_CHANNEL_NAME
 import project.sheridancollege.wash2goproject.util.Constants.NOTIFICATION_ID
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import project.sheridancollege.wash2goproject.ui.maps.MapUtil
+import project.sheridancollege.wash2goproject.ui.permission.PermissionFragment
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -44,7 +54,6 @@ class TrackerService: LifecycleService() {
 
         val startTime = MutableLiveData<Long>()
         val stopTime = MutableLiveData<Long>()
-        //private lateinit var map: GoogleMap
     }
 
     private val locationCallback = object : LocationCallback(){
@@ -55,19 +64,6 @@ class TrackerService: LifecycleService() {
                     updateLocationList(location)
                     updateNotificationPeriodically()
                 }
-//            }
-//            var driverLocation: Location  = result.getLastLocation();
-//
-//
-//                var value_lat = (driverLocation.getLatitude()).toString()
-//                var value_lng = (driverLocation.getLongitude()).toString()
-//            var ref: DatabaseReference = FirebaseDatabase.getInstance().getReference("https://wash2goproject-default-rtdb.firebaseio.com/USERS")
-//            var userid = FirebaseAuth.getInstance().currentUser?.providerId
-//            if (userid != null) {
-//                ref.child(userid).child("Latitude").setValue(value_lat)
-//            };
-//            if (userid != null) {
-//                ref.child(userid).child("Longitude").setValue(value_lng)
             }
 
         }
@@ -137,7 +133,7 @@ class TrackerService: LifecycleService() {
 
     //get location update every 4 seconds
     @SuppressLint("MissingPermission")
-    private fun startLocationUpdates(){
+    public fun startLocationUpdates(){
         val locationRequest = LocationRequest.create().apply {
             interval = LOCATION_UPDATE_INTERVAL.toLong() //on which we want to receive location update // LOCATION_UPDATE_INTERVAL = 4 seconds
             fastestInterval = LOCATION_FASTEST_UPDATE_INTERVAL.toLong()
@@ -173,5 +169,6 @@ class TrackerService: LifecycleService() {
             notificationManager.createNotificationChannel(channel)
         }
     }
+
 
 }

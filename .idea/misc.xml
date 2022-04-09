@@ -13,6 +13,7 @@
         <entry key="app/src/main/res/drawable/ic_refresh.xml" value="0.1345" />
         <entry key="app/src/main/res/drawable/ic_run.xml" value="0.1345" />
         <entry key="app/src/main/res/drawable/input_bg.xml" value="0.222" />
+        <entry key="app/src/main/res/layout/activity_coor.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_login_acivity.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.1" />

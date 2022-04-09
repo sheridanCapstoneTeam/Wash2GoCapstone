@@ -5,9 +5,9 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.graphics.Color
 import android.location.Location
-import android.os.AsyncTask
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,9 +20,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.tasks.Task
-import com.google.maps.model.*
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import kotlinx.coroutines.delay
@@ -42,6 +39,7 @@ import project.sheridancollege.wash2goproject.util.ExtensionFunctions.hide
 import project.sheridancollege.wash2goproject.util.ExtensionFunctions.show
 import project.sheridancollege.wash2goproject.util.Permission.hasBackgroundLocationPermission
 import project.sheridancollege.wash2goproject.util.Permission.requestBackgroundLocationPermission
+import project.sheridancollege.wash2goproject.util.coorActivity
 import java.io.IOException
 import javax.inject.Inject
 
@@ -52,12 +50,13 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     @Inject
     lateinit var notification: NotificationCompat.Builder
 
+    private  var currentMarker: Marker? = null
     @Inject
     lateinit var notificationManager: NotificationManager
     var providerLocaion: HashMap<String, ProviderLocation> = HashMap()
     var customerLocaion: HashMap<String, ProviderLocation> =
         HashMap() //change type from provider to customer
-
+    private lateinit var location : Location
     private val POLYLINE_STROKE_WIDTH_PX = 12
     private var _binding: FragmentMapsBinding? = null
     private val binding get() = _binding!!
@@ -72,23 +71,28 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private var locationList = mutableListOf<LatLng>()
 
     //private var providerNearByLocation = mutableListOf<LatLng>()
-    private lateinit var mlocation: Location
-    private lateinit var plocation: Location
+
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        location = Location("")
 
-
-        mlocation = Location("")
-        plocation = Location("")
         // Get the Intent that started this activity and extract the string
         val intent = activity?.intent
-        var customerlot = intent?.getDoubleExtra("cusLot", 0.0)
-        var customerlng = intent?.getDoubleExtra("cusLng", 0.0)
+        var customerlot = intent?.getDoubleExtra(coorActivity.EXTRA_MESSAGELot, 0.0)
+        var customerlng = intent?.getDoubleExtra(coorActivity.EXTRA_MESSAGELng, 0.0)
+        if (customerlot != null) {
+            location.latitude = customerlot
+        }
 
+        if (customerlng != null) {
+            location.longitude = customerlng
+        }
+
+        Log.d("TAG","Received Cor: $customerlot,$customerlng")
 
         //printing our results:
         print("this is maps fragment lot  " + customerlot + "this is maps fragment lng " + customerlng)
@@ -103,12 +107,14 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         providerLocaion.put("2", ProviderLocation(43.6125, -79.6573))
         providerLocaion.put("3", ProviderLocation(43.5512, -79.7206))
         providerLocaion.put("4", ProviderLocation(43.7162, -79.7426))
-
+//provider view - make another view
+        //update the map
 
         // Inflate the layout for this fragment
         _binding = FragmentMapsBinding.inflate(inflater, container, false)
 
         binding.startBtn.setOnClickListener {
+
             onStartButtonClicked()
             var arrayOfResult: ArrayList<Double> = ArrayList<Double>()
             var arrayTime: ArrayList<String> = ArrayList<String>()
@@ -216,7 +222,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap!!
-        val latLng = LatLng(60.374659, -111.494255) //Canada
+        val latLng = LatLng(location.latitude, location.longitude) //Canada
         googleMap.addMarker(
             MarkerOptions()
                 .position(latLng)
@@ -230,10 +236,9 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
             isCompassEnabled = true
         }
         map.uiSettings.setAllGesturesEnabled(true)
-        map.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15f))
         map.mapType = GoogleMap.MAP_TYPE_NORMAL
-
-        observeTrackerService()
+       observeTrackerService()
     }
 
 
@@ -244,6 +249,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
                 if (locationList.size > 1) {
                     binding.stopBtn.enable()
                 }
+
                 drawPolyLine()
                 followPolyLine()
             }
@@ -400,84 +406,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         _binding = null
     }
 
-//    inner class GetDistanceMatrix : AsyncTask<Bundle?, Void?, Response?>() {
-//        //var dialog = ProgressDialog(MapsFragment)
-//
-//        override fun onPreExecute() {
-//            super.onPreExecute()
-//            print("preExecute the task")
-////            dialog.setMessage("Please wait ... ")
-////            dialog.setCanceledOnTouchOutside(false)
-////            dialog.show()
-//        }
-//        //calling api and returing a response
-//        override fun doInBackground(vararg bundle: Bundle?): Response? {
-//            print("bundle in doing background" + bundle)
-//            var tempLatO = bundle.get(0)
-//            var tempLngO = bundle.get(1)
-//
-//            var tempLatD = bundle.get(2)
-//            var tempLngD = bundle.get(3)
-//
-//            val response: Response
-//            try {
-//                var client =  OkHttpClient().newBuilder()
-//                    .build();
-//                var request = Request.Builder()
-//                    .url("https://maps.googleapis.com/maps/api/distancematrix/json?origins=$tempLatO%2C$tempLngO&destinations=$tempLatD%2C$tempLngD&key=AIzaSyBcNe5mLxKAaeJSmsFz0F2E7jd-SmO_v5o")
-//                    .method("GET", null)
-//                    .build();
-//                  response = client.newCall(request).execute()
-//                print("this is doInBackground response" + response)
-//                return response
-//            } catch (ex: Exception) {
-//            }
-//            return null
-//        }
-//
-//            //called at the end
-//        override fun onPostExecute(s: Response?) {
-//                print("this is  onPostExecute response" + s)
-//        }
-//
-//
-//    }
-
 }
-
-//fun getDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): String? {
-//    val parsedDistance = arrayOfNulls<String>(1)
-//    val response = arrayOfNulls<String>(1)
-//    val thread = Thread {
-//        try {
-//            val url =
-//                URL("https://maps.googleapis.com/maps/api/directions/json?origin=$lat1,$lon1&destination=$lat2,$lon2&sensor=false&units=metric&mode=driving")
-//            Log.v("urldirection", url.toString())
-//            val conn: HttpURLConnection = url.openConnection() as HttpURLConnection
-//            conn.setRequestMethod("POST")
-//            val `in`: InputStream = BufferedInputStream(conn.getInputStream())
-//            response[0] = org.apache.commons.io.IOUtils.toString(`in`, "UTF-8")
-//            val jsonObject = JSONObject(response[0])
-//            val array = jsonObject.getJSONArray("routes")
-//            val routes = array.getJSONObject(0)
-//            val legs = routes.getJSONArray("legs")
-//            val steps = legs.getJSONObject(1)
-//            val distance = steps.getJSONObject("duration")
-//            parsedDistance[0] = distance.getString("text")
-//        } catch (e: JSONException) {
-//            Log.v(TAG, e.toString())
-//        } catch (e: IOException) {
-//            Log.v(TAG, e.toString())
-//        }
-//    }
-//    thread.start()
-//    try {
-//        thread.join()
-//    } catch (e: InterruptedException) {
-//        Log.v("DistanceGoogleAPi", "Interrupted!$e")
-//        Thread.currentThread().interrupt()
-//    }
-//    return parsedDistance[0]
-//}
 
 
