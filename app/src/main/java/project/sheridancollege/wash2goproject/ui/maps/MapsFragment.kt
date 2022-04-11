@@ -2,8 +2,12 @@ package project.sheridancollege.wash2goproject.ui.maps
 
 import android.annotation.SuppressLint
 import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
 import android.location.Location
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -53,8 +57,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     EasyPermissions.PermissionCallbacks {
     @Inject
     lateinit var notification: NotificationCompat.Builder
-
-    private  var currentMarker: Marker? = null
     @Inject
     lateinit var notificationManager: NotificationManager
     var providerLocaion: HashMap<String, ProviderLocation> = HashMap()
@@ -66,16 +68,11 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private val binding get() = _binding!!
     private lateinit var map: GoogleMap
     private var mapUrl: String = ""
-
-
     private var startTime = 0L
     private var stopTime = 0L
 
     //observe this list from our tracker service
     private var locationList = mutableListOf<LatLng>()
-
-    //private var providerNearByLocation = mutableListOf<LatLng>()
-
 
     private lateinit var addressLatLng:LatLng
 
@@ -96,17 +93,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         if (customerlng != null) {
             location.longitude = customerlng
         }
-
-
         addressLatLng = LatLng(customerlot!! ,customerlng!!)
-
         Log.d("TAG","Received Cor: $customerlot,$customerlng")
-
-        //printing our results:
-        print("this is maps fragment lot  " + customerlot + "this is maps fragment lng " + customerlng)
-
-        // coorActivity c = new coorActivity()
-
         //Customers
         customerLocaion.put("1", ProviderLocation(customerlot, customerlng))
 
@@ -115,8 +103,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         providerLocaion.put("2", ProviderLocation(43.6125, -79.6573))
         providerLocaion.put("3", ProviderLocation(43.5512, -79.7206))
         providerLocaion.put("4", ProviderLocation(43.7162, -79.7426))
-//provider view - make another view
-        //update the map
 
         // Inflate the layout for this fragment
         _binding = FragmentMapsBinding.inflate(inflater, container, false)
@@ -139,9 +125,9 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
                         customerLocaion.get("1")!!.lat, customerLocaion.get("1")!!.lng
                     )
 
-                var result = MapUtil.calculateTheDistance(listOfCustomerAndProvider)
-                print("This is the result" + result.toDouble())
-                arrayOfResult.add(result.toDouble())
+//                var result = MapUtil.calculateTheDistance(listOfCustomerAndProvider)
+//                print("This is the result" + result.toDouble())
+//                arrayOfResult.add(result.toDouble())
 
                 var tempLatD = value.lat.toString()
                 var tempLngD = value.lng.toString()
@@ -151,7 +137,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
             var tempLngO = customerLocaion.get("1")!!.lng
             mapUrl =
                 "https://maps.googleapis.com/maps/api/distancematrix/json?origins=$tempLatO%2C$tempLngO&destinations=$destinations&key=AIzaSyBcNe5mLxKAaeJSmsFz0F2E7jd-SmO_v5o"
-            print("mapurl " + mapUrl)
 
             val urlMap = mapUrl
             val request = Request.Builder()
@@ -175,16 +160,21 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
                         var minDistance= Int.MAX_VALUE
                         var minDuration = Int.MAX_VALUE
                         var minDistanceIndex = 0
+                        var dstString = ""
+                        var durString = ""
                         for ((i,element) in elements.withIndex()){
                              distances.add(element.distance)
                              durations.add(element.duration)
                             val dst = element.distance?.value ?: Int.MAX_VALUE
-                            if(dst<minDistance){
+                              dstString = element.distance?.text.toString()
+                            if(dst < minDistance){
                                 minDistance = dst
+                                dstString = minDistance.toString()
                                 minDistanceIndex = i
                             }
                             val dur = element.duration?.value ?: Int.MAX_VALUE
-                            if(dur<minDuration){
+                             durString = element.duration?.text.toString()
+                            if(dur < minDuration){
                                 minDuration = dur
                             }
                         }
@@ -225,62 +215,20 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
                                     }
 
                                     override fun onFinish() {
-
+                                        map.addMarker(
+                                            MarkerOptions().position(destLatLng)
+                                                .title("Provider Location")
+                                                .icon(generateBitmapDescriptor(requireActivity(),R.drawable.rectangle_shape,dstString,durString))
+                                                .anchor(1f,0f)
+                                        )
                                     }
 
                                 }
                             )
-
-
                         }
-
-
-
-
-
-/*
-                        //var json = JSONObject(response.body()!!.string())
-
-                        val rows = json["rows"] as JSONArray
-                        print("this rows response" + rows)
-                        //val elements = rows[0] as JSONObject
-                        val distance = elements["elements"] as JSONArray
-                        //this is array - loop through it and get every object
-                        for (i in 0 until distance.length()) {
-                            var oneDestination = distance.getJSONObject(i)
-                            var responseDuration = oneDestination.getJSONObject("duration").getString("text")
-                            arrayTime.add(responseDuration)
-                        }
-
-                        val distanceArray = distance[0] as JSONObject
-                        val distanceData = distanceArray["distance"] as JSONObject
-                        val durationData = distanceArray["duration"] as JSONObject
-
-                        val dist = distanceData["value"].toString().toDouble()
-                        val durationValue = durationData["text"].toString()
-
-                        print("this dist response" + dist)
-                        val distKm = (dist / 1000)
-
-                        var shortestTime = arrayTime.minByOrNull { it }!!
-                        print("the samllest " + shortestTime)
-                        binding.resultTextView.text = "provider is " +
-                                shortestTime + " away"*/
-
-
                     }
                 }
             })
-
-          /*  print("This is a list")
-            print(arrayOfResult)
-            var nearestLoaction = arrayOfResult.minByOrNull { it }!!
-            print("the samllest " + nearestLoaction)
-
-
-            binding.distanceReult.text = ( "Distance is " +
-                    nearestLoaction.toString() + " km ")*/
-
         }
 
         binding.stopBtn.setOnClickListener {
@@ -363,13 +311,13 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     //and for camera postion will choose last location in the locationlist
     private fun followPolyLine() {
         if (locationList.isNotEmpty()) {
-            map.animateCamera(
+            /*map.animateCamera(
                 CameraUpdateFactory.newCameraPosition(
                     MapUtil.setCameraPosition(
                         locationList.last()
                     )
-                ), 1000, null
-            )
+                ), 1000, null*/
+
         }
     }
 
@@ -485,6 +433,27 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     override fun onDestroyView() { //to avoid memory leaks
         super.onDestroyView()
         _binding = null
+    }
+
+     fun generateBitmapDescriptor(context:Context,resId:Int,distance:String,duration:String):BitmapDescriptor?{
+        val drawable = ContextCompat.getDrawable(context,resId)
+
+        drawable!!.setBounds(0,0,drawable.intrinsicWidth,drawable.intrinsicHeight)
+
+        val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth,drawable.intrinsicHeight,Bitmap.Config.ARGB_8888)
+
+        val canvas = Canvas(bitmap)
+        drawable.draw(canvas)
+
+        val paint = Paint()
+        paint.style = Paint.Style.FILL
+        paint.color = Color.BLUE
+        paint.textSize = 40f
+
+        canvas.drawText("Distance: $distance",0f,(bitmap.height/3).toFloat(),paint)
+        canvas.drawText("Duration: $duration",0f,(bitmap.height/1.5).toFloat(),paint)
+
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
     companion object{
