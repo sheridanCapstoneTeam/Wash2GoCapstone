@@ -160,22 +160,23 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
                         var minDistance= Int.MAX_VALUE
                         var minDuration = Int.MAX_VALUE
                         var minDistanceIndex = 0
-                        var dstString = ""
+                        var dstSting = ""
                         var durString = ""
+
                         for ((i,element) in elements.withIndex()){
                              distances.add(element.distance)
                              durations.add(element.duration)
-                            val dst = element.distance?.value ?: Int.MAX_VALUE
-                              dstString = element.distance?.text.toString()
+                            var dst = element.distance?.value ?: Int.MAX_VALUE
+
                             if(dst < minDistance){
                                 minDistance = dst
-                                dstString = minDistance.toString()
+                                dstSting = element.distance?.text.toString()
                                 minDistanceIndex = i
                             }
                             val dur = element.duration?.value ?: Int.MAX_VALUE
-                             durString = element.duration?.text.toString()
                             if(dur < minDuration){
                                 minDuration = dur
+                                durString = element.duration?.text.toString()
                             }
                         }
 
@@ -218,7 +219,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
                                         map.addMarker(
                                             MarkerOptions().position(destLatLng)
                                                 .title("Provider Location")
-                                                .icon(generateBitmapDescriptor(requireActivity(),R.drawable.rectangle_shape,dstString,durString))
+                                                .icon(generateBitmapDescriptor(requireActivity(),R.drawable.rectangle_shape,dstSting,durString))
                                                 .anchor(1f,0f)
                                         )
                                     }
