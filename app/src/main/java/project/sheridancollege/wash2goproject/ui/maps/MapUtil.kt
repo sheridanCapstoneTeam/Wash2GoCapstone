@@ -24,8 +24,8 @@ object MapUtil {
         //get minutes
         val minutes = (elapsedTime/ (1000*60) % 60)
 
-        //get hours
-        val hours = (elapsedTime/ (1000*60*60) % 24)
+//        //get hours
+//        val hours = (elapsedTime/ (1000*60*60) % 24)
 
         return "$minutes"
     }

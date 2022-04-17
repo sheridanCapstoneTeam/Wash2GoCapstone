@@ -52,6 +52,7 @@ class TrackerService: LifecycleService() {
 
         val locationList =  MutableLiveData<MutableList<LatLng>>()
 
+
         val startTime = MutableLiveData<Long>()
         val stopTime = MutableLiveData<Long>()
     }

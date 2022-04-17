@@ -4,13 +4,11 @@
     package="project.sheridancollege.wash2goproject">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- more accurate location-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- more accurate location -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".MyApplication"
@@ -20,11 +18,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Wash2GoProject">
+        <activity
+            android:name=".ProviderDatabaseRegister"
+            android:exported="false" />
 
-        <service android:name=".service.TrackerService"
-            android:foregroundServiceType="location"
-            android:exported="false"/> <!-- it is not available to another app -->
-
+        <service
+            android:name=".service.TrackerService"
+            android:exported="false"
+            android:foregroundServiceType="location" /> <!-- it is not available to another app -->
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -38,7 +39,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBcNe5mLxKAaeJSmsFz0F2E7jd-SmO_v5o"/>
+            android:value="AIzaSyBcNe5mLxKAaeJSmsFz0F2E7jd-SmO_v5o" />
 
         <activity
             android:name=".LoginAcivity"
@@ -49,19 +50,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
-
         <activity
             android:name=".util.coorActivity"
             android:exported="false" />
-
-
-
-
-        <activity android:name=".ui.MainActivity"></activity>
+        <activity android:name=".ui.MainActivity" />
 
         <uses-library
             android:name="org.apache.http.legacy"
