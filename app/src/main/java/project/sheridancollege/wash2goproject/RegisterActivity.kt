@@ -2,11 +2,7 @@ package project.sheridancollege.wash2goproject
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.location.Location
-import android.net.wifi.WifiConfiguration.AuthAlgorithm.strings
-import android.os.AsyncTask
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -17,14 +13,8 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
 import project.sheridancollege.wash2goproject.databinding.ActivityRegisterBinding
-import project.sheridancollege.wash2goproject.service.TrackerService
 import project.sheridancollege.wash2goproject.ui.MainActivity
-import project.sheridancollege.wash2goproject.util.HTTPDataHandler
-import project.sheridancollege.wash2goproject.util.coorActivity
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding

@@ -3,9 +3,7 @@ package project.sheridancollege.wash2goproject.ui.maps
 import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.Context
-import android.content.Intent
 import android.graphics.*
-import android.graphics.drawable.Drawable
 import android.location.Location
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -22,6 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import com.example.example.DirectionApi
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -38,19 +37,16 @@ import org.json.JSONException
 import project.sheridancollege.wash2goproject.ProviderLocation
 import project.sheridancollege.wash2goproject.R
 import project.sheridancollege.wash2goproject.databinding.FragmentMapsBinding
-import project.sheridancollege.wash2goproject.service.TrackerService
+import project.sheridancollege.wash2goproject.ui.core.CoreFragment
+
 import project.sheridancollege.wash2goproject.ui.maps.model.Distance
 import project.sheridancollege.wash2goproject.ui.maps.model.DistanceMatrix
 import project.sheridancollege.wash2goproject.ui.maps.model.Duration
-import project.sheridancollege.wash2goproject.util.Constants.ACTION_SERVICE_START
-import project.sheridancollege.wash2goproject.util.Constants.ACTION_SERVICE_STOP
 import project.sheridancollege.wash2goproject.util.ExtensionFunctions.disabled
-import project.sheridancollege.wash2goproject.util.ExtensionFunctions.enable
 import project.sheridancollege.wash2goproject.util.ExtensionFunctions.hide
 import project.sheridancollege.wash2goproject.util.ExtensionFunctions.show
 import project.sheridancollege.wash2goproject.util.Permission.hasBackgroundLocationPermission
 import project.sheridancollege.wash2goproject.util.Permission.requestBackgroundLocationPermission
-import project.sheridancollege.wash2goproject.util.coorActivity
 import java.io.IOException
 import javax.inject.Inject
 
@@ -86,7 +82,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private lateinit var listOfPolyPoints: List<LatLng>
 
     private lateinit var mCarMarker:Marker
-
+    private val args:MapsFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -95,16 +91,12 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         location = Location("")
          client = OkHttpClient()
         // Get the Intent that started this activity and extract the string
-        val intent = activity?.intent
-        var customerlot = intent?.getDoubleExtra(coorActivity.EXTRA_MESSAGELot, 0.0)
-        var customerlng = intent?.getDoubleExtra(coorActivity.EXTRA_MESSAGELng, 0.0)
-        if (customerlot != null) {
-            location.latitude = customerlot
-        }
+        val  customerlot = args.latitude.toDouble()
+        val customerlng = args.longitude.toDouble()
 
-        if (customerlng != null) {
+            location.latitude = customerlot
             location.longitude = customerlng
-        }
+
         addressLatLng = LatLng(customerlot!! ,customerlng!!)
         Log.d("TAG","Received Cor: $customerlot,$customerlng")
         //Customers
@@ -417,58 +409,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15f))
         map.mapType = GoogleMap.MAP_TYPE_NORMAL
 
-        observeTrackerService()
-    }
-
-
-    private fun observeTrackerService() {
-        TrackerService.locationList.observe(viewLifecycleOwner) {
-            if (it != null) {
-                listOfPolyPoints = it
-                if (listOfPolyPoints.size > 1) {
-                    binding.stopBtn.enable()
-                }
-
-                drawPolyLine()
-                followPolyLine()
-            }
-        }
-
-        TrackerService.startTime.observe(viewLifecycleOwner) {
-            startTime = it
-        }
-
-        TrackerService.stopTime.observe(viewLifecycleOwner) {
-            stopTime = it
-        }
-    }
-
-    private fun drawPolyLine() {
-//        val polyLine = map.addPolyline(
-//            PolylineOptions().apply {
-//                width(POLYLINE_STROKE_WIDTH_PX.toFloat())
-//                color(Color.RED)
-//                jointType(JointType.ROUND)
-//                startCap(ButtCap())
-//                endCap(ButtCap())
-//                addAll(locationList)
-//            }
-//        )
-
-    }
-
-    //this function will set the camera position everytime we receive a new location
-    //and for camera postion will choose last location in the locationlist
-    private fun followPolyLine() {
-   //     if (listOfPolyPoints.isNotEmpty()) {
-//            map.animateCamera(
-//                CameraUpdateFactory.newCameraPosition(
-//                    MapUtil.setCameraPosition(
-//                        listOfPolyPoints.last()
-//                    )
-//                )
-//            )
-        //}
     }
 
     private fun onStartButtonClicked() {
@@ -485,7 +425,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     }
 
     private fun onStopButtonClick() {
-        stopForegroundService()
         binding.stopBtn.hide()
         binding.startBtn.show()
     }
@@ -518,27 +457,12 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
 
             override fun onFinish() {
                 binding.timerTextView.hide()
-                sendActionCommandToService(ACTION_SERVICE_START)
             }
         }
         timer.start()
 
     }
-    private fun stopForegroundService() {
-        binding.startBtn.show()
-        sendActionCommandToService(ACTION_SERVICE_STOP)
-    }
 
-    //send action to our service and start the service
-    private fun sendActionCommandToService(action: String) {
-        Intent(
-            requireContext(),
-            TrackerService::class.java
-        ).apply {
-            this.action = action
-            requireContext().startService(this) //refer to intent
-        }
-    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

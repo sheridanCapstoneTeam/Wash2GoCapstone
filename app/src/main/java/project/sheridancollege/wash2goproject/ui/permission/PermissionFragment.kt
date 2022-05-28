@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.NavArgs
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
 import project.sheridancollege.wash2goproject.R
@@ -17,6 +19,7 @@ class PermissionFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private var _binding: FragmentPermissionBinding? = null
     private val binding get() = _binding!!
+    private val args:PermissionFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,7 +30,7 @@ class PermissionFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         binding.continueButton.setOnClickListener {
             if(hasLocationPermission(requireContext())){
-                findNavController().navigate(R.id.action_permissionFragment_to_mapsFragment)
+                findNavController().navigate(PermissionFragmentDirections.actionPermissionFragmentToMapsFragment(args.latitude,args.longitude))
             }else {
                 requestLocationPermission(this)
             }

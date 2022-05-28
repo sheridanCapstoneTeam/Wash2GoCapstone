@@ -1,16 +1,20 @@
-package project.sheridancollege.wash2goproject
-
+package project.sheridancollege.wash2goproject.ui.login
 
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.preference.PreferenceManager
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -22,59 +26,73 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import project.sheridancollege.wash2goproject.ui.MainActivity
-import project.sheridancollege.wash2goproject.util.coorActivity
+import project.sheridancollege.wash2goproject.R
+import project.sheridancollege.wash2goproject.RegisterActivity
 
+class LoginFragment : Fragment() {
 
-class LoginAcivity : AppCompatActivity() {
+    companion object {
+        fun newInstance() = LoginFragment()
+    }
     private lateinit var mAuth: FirebaseAuth;
     lateinit var mGoogleSignInClient: GoogleSignInClient
     val Req_Code:Int=123
     private var rootDatabaseref: DatabaseReference? = null
 
+    private lateinit var viewModel: LoginViewModel
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login_acivity)
-        val googleButton : Button = findViewById(R.id.btnGoogle)
-        val btnLogin : Button = findViewById(R.id.btnLogin)
-        val btn : TextView = findViewById(R.id.textViewSignup)
-
-        rootDatabaseref = FirebaseDatabase.getInstance().reference.child("email")
-
-
-        btn.setOnClickListener {
-            val intent = Intent(this@LoginAcivity,
-                RegisterActivity::class.java)
-            startActivity(intent)
-        }
-
-        btnLogin.setOnClickListener{
-            checkCredentials() }
-        mAuth = FirebaseAuth.getInstance()
-
-
-        // Configure Google Sign In
-        // Configure Google Sign In inside onCreate mentod
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-// getting the value of gso inside the GoogleSigninClient
-        mGoogleSignInClient=GoogleSignIn.getClient(this,gso)
-
-
-
-        googleButton.setOnClickListener {
-            signInGoogle()
-        }
-
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.login_fragment, container, false)
     }
 
-    private fun checkCredentials(){
-        val email: EditText = findViewById(R.id.inputEmail)
-        val password: EditText = findViewById(R.id.inputPassword)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
+
+
+            val googleButton : Button = view.findViewById(R.id.btnGoogle)
+            val btnLogin : Button = view.findViewById(R.id.btnLogin)
+            val btn : TextView = view.findViewById(R.id.textViewSignup)
+
+            rootDatabaseref = FirebaseDatabase.getInstance().reference.child("email")
+
+
+            btn.setOnClickListener {
+                val intent = Intent(requireActivity(),
+                    RegisterActivity::class.java)
+                startActivity(intent)
+            }
+
+            btnLogin.setOnClickListener{
+                checkCredentials(view) }
+            mAuth = FirebaseAuth.getInstance()
+
+
+            // Configure Google Sign In
+            // Configure Google Sign In inside onCreate mentod
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+// getting the value of gso inside the GoogleSigninClient
+            mGoogleSignInClient= GoogleSignIn.getClient(requireActivity(),gso)
+
+
+
+            googleButton.setOnClickListener {
+                signInGoogle()
+            }
+
+        }
+
+
+    private fun checkCredentials( view:View){
+        val email: EditText = view.findViewById(R.id.inputEmail)
+        val password: EditText = view.findViewById(R.id.inputPassword)
 
         val inputEmail = email.text.toString()
         val inputPass = password.text.toString()
@@ -89,23 +107,12 @@ class LoginAcivity : AppCompatActivity() {
                 .addOnCompleteListener { task: Task<AuthResult> ->
                     if(task.isSuccessful){
                         Toast.makeText(
-                            this, "Your are successfully registered ", Toast.LENGTH_LONG
+                            requireContext(), "Your are successfully registered ", Toast.LENGTH_LONG
                         ).show()
-
-                        val firebaseUser = this.mAuth.currentUser!!
-                        val intent = Intent(this@LoginAcivity,
-                            coorActivity::class.java)
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                or Intent.FLAG_ACTIVITY_NEW_TASK)
-// EXTER UID FOR USER
-                        //var currentUserId = mAuth.currentUser?.uid
-                        //intent.putExtra("currentUserId" , currentUserId)
-                        startActivity(intent)
-
-
+                        findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToCoreFragment())
                     }else {
                         Toast.makeText(
-                            this, "sorry something went wrong!", Toast.LENGTH_LONG
+                            requireContext(), "sorry something went wrong!", Toast.LENGTH_LONG
                         ).show()
                     }
 
@@ -169,7 +176,7 @@ class LoginAcivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode==Req_Code){
-            val task:Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
+            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleResult(task)
         }
     }
@@ -180,8 +187,8 @@ class LoginAcivity : AppCompatActivity() {
             if (account != null) {
                 UpdateUI(account)
             }
-        } catch (e:ApiException){
-            Toast.makeText(this,e.toString(),Toast.LENGTH_SHORT).show()
+        } catch (e: ApiException){
+            Toast.makeText(requireContext(),e.toString(), Toast.LENGTH_SHORT).show()
         }
     }
     // UpdateUI() function - this is where we specify what UI updation are needed after google signin has taken place.
@@ -189,20 +196,28 @@ class LoginAcivity : AppCompatActivity() {
         val credential= GoogleAuthProvider.getCredential(account.idToken,null)
         mAuth.signInWithCredential(credential).addOnCompleteListener {task->
             if(task.isSuccessful) {
-                SavedPreference.setEmail(this,account.email.toString())
-                SavedPreference.setUsername(this,account.displayName.toString())
-                val intent = Intent(this, MainActivity::class.java)
+                SavedPreference.setEmail(requireActivity(),account.email.toString())
+                SavedPreference.setUsername(requireActivity(),account.displayName.toString())
+               /* val intent = Intent(requireActivity(), MainActivity::class.java)
                 startActivity(intent)
-                finish()
+                finish()*/
             }
         }
     }
     override fun onStart() {
         super.onStart()
-        if(GoogleSignIn.getLastSignedInAccount(this)!=null){
+       /* if(GoogleSignIn.getLastSignedInAccount(this)!=null){
             startActivity(Intent(this, MainActivity::class.java))
             finish()
-        }
+        }*/
     }
+
+
+
+
+
+
+
+
 
 }

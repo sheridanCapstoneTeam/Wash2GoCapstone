@@ -11,21 +11,15 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
-        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Wash2GoProject">
-        <activity
-            android:name=".ProviderDatabaseRegister"
-            android:exported="false" />
 
-        <service
-            android:name=".service.TrackerService"
-            android:exported="false"
-            android:foregroundServiceType="location" /> <!-- it is not available to another app -->
+
+
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -42,21 +36,17 @@
             android:value="AIzaSyBcNe5mLxKAaeJSmsFz0F2E7jd-SmO_v5o" />
 
         <activity
-            android:name=".LoginAcivity"
-            android:exported="true">
+            android:name=".RegisterActivity"
+            android:exported="false" />
+
+        <activity android:name=".ui.MainActivity"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".RegisterActivity"
-            android:exported="false" />
-        <activity
-            android:name=".util.coorActivity"
-            android:exported="false" />
-        <activity android:name=".ui.MainActivity" />
 
         <uses-library
             android:name="org.apache.http.legacy"
