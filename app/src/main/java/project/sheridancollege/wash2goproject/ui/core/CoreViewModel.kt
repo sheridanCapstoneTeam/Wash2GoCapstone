@@ -11,8 +11,8 @@ import project.sheridancollege.wash2goproject.util.HTTPDataHandler
 
 class CoreViewModel : ViewModel() {
 
-    private val _coOrdinates: MutableLiveData<String> = MutableLiveData()
-    val coOrdinates:LiveData<String> = _coOrdinates
+    private val _coOrdinates: MutableLiveData<String?> = MutableLiveData()
+    val coOrdinates:LiveData<String?> = _coOrdinates
 
     fun  getCoOrdinates(address:String){
         viewModelScope.launch {
@@ -31,5 +31,9 @@ class CoreViewModel : ViewModel() {
                 }
             }
         }
+    }
+
+    fun resetResponse() {
+        _coOrdinates.postValue(null)
     }
 }

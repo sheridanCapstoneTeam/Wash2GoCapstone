@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.example.DirectionApi
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -45,8 +46,11 @@ import project.sheridancollege.wash2goproject.ui.maps.model.Duration
 import project.sheridancollege.wash2goproject.util.ExtensionFunctions.disabled
 import project.sheridancollege.wash2goproject.util.ExtensionFunctions.hide
 import project.sheridancollege.wash2goproject.util.ExtensionFunctions.show
+import project.sheridancollege.wash2goproject.util.Permission
 import project.sheridancollege.wash2goproject.util.Permission.hasBackgroundLocationPermission
+import project.sheridancollege.wash2goproject.util.Permission.hasLocationPermission
 import project.sheridancollege.wash2goproject.util.Permission.requestBackgroundLocationPermission
+import project.sheridancollege.wash2goproject.util.Permission.requestLocationPermission
 import java.io.IOException
 import javax.inject.Inject
 
@@ -88,17 +92,19 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Inflate the layout for this fragment
+        _binding = FragmentMapsBinding.inflate(inflater, container, false)
         location = Location("")
-         client = OkHttpClient()
+        client = OkHttpClient()
         // Get the Intent that started this activity and extract the string
-        val  customerlot = args.latitude.toDouble()
+        val customerlot = args.latitude.toDouble()
         val customerlng = args.longitude.toDouble()
 
-            location.latitude = customerlot
-            location.longitude = customerlng
+        location.latitude = customerlot
+        location.longitude = customerlng
 
-        addressLatLng = LatLng(customerlot!! ,customerlng!!)
-        Log.d("TAG","Received Cor: $customerlot,$customerlng")
+        addressLatLng = LatLng(customerlot!!, customerlng!!)
+        Log.d("TAG", "Received Cor: $customerlot,$customerlng")
         //Customers
         customerLocaion.put("1", ProviderLocation(customerlot, customerlng))
 
@@ -107,10 +113,20 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         providerLocaion.put("2", ProviderLocation(43.6125, -79.6573))
         providerLocaion.put("3", ProviderLocation(43.5512, -79.7206))
         providerLocaion.put("4", ProviderLocation(43.7162, -79.7426))
-        providerLocaion.put("5",ProviderLocation(43.46984416247697, -79.70092069574098))
+        providerLocaion.put("5", ProviderLocation(43.46984416247697, -79.70092069574098))
 
-        // Inflate the layout for this fragment
-        _binding = FragmentMapsBinding.inflate(inflater, container, false)
+        if(!Permission.hasLocationPermission(requireContext())){
+            findNavController().navigate(MapsFragmentDirections.actionMapsFragmentToPermissionFragment())
+        }else{
+            doOnPermissionGranted()
+        }
+
+        return binding.root
+    }
+
+    private fun doOnPermissionGranted() {
+
+
         binding.hintTextView.hide()
         binding.startBtn.show()
 
@@ -128,8 +144,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         binding.resetBtn.setOnClickListener {
 
         }
-
-        return binding.root
     }
 
     private fun callDirectionsApi(source: LatLng, destination: LatLng) {
@@ -399,8 +413,10 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
                 .title("I am here")
         )
 
-        map.isMyLocationEnabled = true
-        map.setOnMyLocationButtonClickListener(this)
+        if(Permission.hasLocationPermission(requireActivity())) {
+            map.isMyLocationEnabled = true
+            map.setOnMyLocationButtonClickListener(this)
+        }
         map.uiSettings.apply {
             isZoomControlsEnabled = true
             isCompassEnabled = true
@@ -412,7 +428,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     }
 
     private fun onStartButtonClicked() {
-        if (hasBackgroundLocationPermission(requireContext())) {
+        if (hasLocationPermission(requireContext())) {
             startCountDown()
 
             binding.startBtn.disabled()
@@ -420,7 +436,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
             binding.stopBtn.hide()
 
         } else {
-            requestBackgroundLocationPermission(this)
+            requestLocationPermission(this)
         }
     }
 

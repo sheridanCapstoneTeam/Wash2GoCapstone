@@ -19,7 +19,6 @@ class PermissionFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private var _binding: FragmentPermissionBinding? = null
     private val binding get() = _binding!!
-    private val args:PermissionFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,11 +28,7 @@ class PermissionFragment : Fragment(), EasyPermissions.PermissionCallbacks {
        _binding = FragmentPermissionBinding.inflate(inflater, container, false)
 
         binding.continueButton.setOnClickListener {
-            if(hasLocationPermission(requireContext())){
-                findNavController().navigate(PermissionFragmentDirections.actionPermissionFragmentToMapsFragment(args.latitude,args.longitude))
-            }else {
                 requestLocationPermission(this)
-            }
         }
         return binding.root
     }
@@ -55,8 +50,7 @@ class PermissionFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
-        findNavController().navigate(R.id.action_permissionFragment_to_mapsFragment)
-
+        findNavController().navigateUp()
     }
 
 

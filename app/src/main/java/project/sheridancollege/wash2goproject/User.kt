@@ -1,12 +1,12 @@
 package project.sheridancollege.wash2goproject
 
 
-data class User (val UserId: String,
-                 val FirstName: String,
-                 var LastName: String,
-                 var Email: String,
-                 var StreetNum: String,
-                 var StreetName: String,
-                 var City: String,
-                 var Phone: String,
-                 var IsProvider: Boolean)
+data class User (val userId: String="",
+                 val firstName: String="",
+                 var lastName: String="",
+                 var email: String="",
+                 var streetNum: String="",
+                 var streetName: String="",
+                 var city: String="",
+                 var phone: String="",
+                 var isProvider: Boolean=false)

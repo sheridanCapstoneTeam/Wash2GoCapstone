@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="project.sheridancollege.wash2goproject">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -35,9 +34,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBcNe5mLxKAaeJSmsFz0F2E7jd-SmO_v5o" />
 
-        <activity
-            android:name=".RegisterActivity"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".RegisterActivity"-->
+<!--            android:exported="false" />-->
 
         <activity android:name=".ui.MainActivity"
             android:exported="true"

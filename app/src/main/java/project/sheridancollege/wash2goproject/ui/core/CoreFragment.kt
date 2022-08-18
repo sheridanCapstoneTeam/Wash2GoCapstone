@@ -52,8 +52,10 @@ class CoreFragment : Fragment() {
 
 
         viewModel.coOrdinates.observe(viewLifecycleOwner) { response->
-            if(response!=null)
-             onPostExecute(response)
+            if(response!=null) {
+                onPostExecute(response)
+                viewModel.resetResponse();
+            }
         }
     }
 
@@ -76,9 +78,9 @@ class CoreFragment : Fragment() {
             val latloc = loc.latitude
             val lngLoc = loc.longitude
             loc = createNewLocation(latloc, lngLoc)
-            findNavController().navigate(CoreFragmentDirections.actionCoreFragmentToPermissionFragment(
+          /*  findNavController().navigate(CoreFragmentDirections.actionCoreFragmentToMapsFragment(
                 loc.latitude.toFloat(), loc.longitude.toFloat()
-            ))
+            ))*/
 
         } catch (e: JSONException) {
             e.printStackTrace()

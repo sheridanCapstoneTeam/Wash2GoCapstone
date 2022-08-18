@@ -1,50 +1,67 @@
-package project.sheridancollege.wash2goproject
+package project.sheridancollege.wash2goproject.ui.register
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import project.sheridancollege.wash2goproject.databinding.ActivityRegisterBinding
+import project.sheridancollege.wash2goproject.R
+import project.sheridancollege.wash2goproject.User
+import project.sheridancollege.wash2goproject.databinding.FragmentRegisterBinding
 import project.sheridancollege.wash2goproject.ui.MainActivity
+import project.sheridancollege.wash2goproject.ui.maps.MapsFragmentArgs
 
-class RegisterActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityRegisterBinding
+
+class RegisterFragment : Fragment() {
+
+    companion object {
+        fun newInstance() = RegisterFragment()
+    }
+
+    private lateinit var binding: FragmentRegisterBinding
     private lateinit var mAuth: FirebaseAuth
     private var database: DatabaseReference? = null
     var currentUserId: String? = ""
     var isProvider: Boolean = false
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_register, container, false)
+        return binding.root
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityRegisterBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         database = FirebaseDatabase.getInstance().reference.child("USERS")
 
-
-
-
-        val btnRegister:Button = findViewById(R.id.btnRegister)
         mAuth = FirebaseAuth.getInstance()
-         currentUserId = mAuth.currentUser?.uid
+        currentUserId = mAuth.currentUser?.uid
 
-        btnRegister.setOnClickListener {
+        binding.registerBtn.setOnClickListener {
             checkCredentials()
             //Store the location here
 
-                /*coorActivity ca = new
-                    .GetCoordinates()
-                    .execute(edtAddress.getText().toString().replace(" ", "+"))*/
+            /*coorActivity ca = new
+                .GetCoordinates()
+                .execute(edtAddress.getText().toString().replace(" ", "+"))*/
 
         }
 
@@ -52,16 +69,16 @@ class RegisterActivity : AppCompatActivity() {
 
     @SuppressLint("ResourceType")
     private fun checkCredentials(){
-        val firstName: EditText = findViewById(R.id.userName)
-        val lastName: EditText = findViewById(R.id.lastName)
-        val email:EditText = findViewById(R.id.inputEmail)
-        val password: EditText = findViewById(R.id.inputPassword)
-        val conformPassword:EditText = findViewById(R.id.inputConfirmPassword)
-        val streetNumber: EditText = findViewById(R.id.streetNumber)
-        val streetName: EditText = findViewById(R.id.streetName)
-        val phone: EditText = findViewById(R.id.phone)
-        val city: EditText = findViewById(R.id.city)
-        val isUserProvider: CheckBox = findViewById(R.id.isProviderCB)
+        val firstName: EditText = binding.userName
+        val lastName: EditText = binding.lastName
+        val email: EditText = binding.inputEmail
+        val password: EditText = binding.inputPassword
+        val conformPassword: EditText = binding.inputConfirmPassword
+        val streetNumber: EditText = binding.streetNumber
+        val streetName: EditText = binding.streetName
+        val phone: EditText = binding.phone
+        val city: EditText = binding.city
+        val isUserProvider: CheckBox = binding.isProviderCB
 
         val inputFirstName = firstName.text.toString()
         val inputLastName = lastName.text.toString()
@@ -73,16 +90,13 @@ class RegisterActivity : AppCompatActivity() {
         val inputPhone = phone.text.toString()
         val inputCity = city.text.toString()
 
-
-
-
         if(inputFirstName.isEmpty() || inputFirstName.length > 30) {
             showError(firstName,"your First Name is not valid")
         } else if (inputLastName.isEmpty() || inputLastName.length>30){
             showError(lastName,"your Last Name is not valid")
         } else if (inputEmail.isEmpty() || !inputEmail.contains("@")){
             showError(email,"Enter a valid email")
-        }else if (inputPass.isEmpty() || inputPass.length < 7){
+        }else if (inputPass.isEmpty() || inputPass.length  < 7){
             showError(password,"Password must be 7 character")
         }else if (inputConformPass.isEmpty() || inputConformPass != inputPass){
             showError(conformPassword ,"password not Match")
@@ -99,9 +113,7 @@ class RegisterActivity : AppCompatActivity() {
             mAuth.createUserWithEmailAndPassword(inputEmail, inputPass)
                 .addOnCompleteListener { task: Task<AuthResult> ->
                     if(task.isSuccessful){
-                        Toast.makeText(
-                            this, "Your are successfully registered ", Toast.LENGTH_LONG
-                        ).show()
+
 
                         if (isUserProvider.isChecked){
                             isProvider = true
@@ -119,28 +131,31 @@ class RegisterActivity : AppCompatActivity() {
                         //send the coordinates to updateFunction
 
                         database?.child(currentUserId)?.setValue(user)
-
-
-                        val firebaseUser = this.mAuth.currentUser!!
-                        val intent = Intent(this@RegisterActivity,
-                            MainActivity::class.java)
-
-                        startActivity(intent)
+                            ?.addOnCompleteListener(OnCompleteListener { task ->
+                                if(task.isSuccessful){
+                                    Toast.makeText(
+                                        requireContext(), "Your are successfully registered ", Toast.LENGTH_LONG
+                                    ).show()
+                                    findNavController().navigateUp()
+                                }else{
+                                    Toast.makeText(
+                                        requireContext(), "sorry something went wrong!", Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            })
                     }else {
                         Toast.makeText(
-                            this, "sorry something went wrong!", Toast.LENGTH_LONG
+                            requireContext(), "sorry something went wrong!", Toast.LENGTH_LONG
                         ).show()
                     }
 
 
                 }
         }
+    }
+        private  fun showError(input: EditText, s: String){
+            input.error = s
+            input.requestFocus()
+        }
 
     }
-
-    private  fun showError(input: EditText, s: String){
-        input.error = s
-        input.requestFocus()
-    }
-
-}
