@@ -17,7 +17,13 @@ object Constants {
 
     const val LOCATION_UPDATE_INTERVAL = 4000
     const val LOCATION_FASTEST_UPDATE_INTERVAL = 2000
-    const val GOOGLE_API_KEY = "AIzaSyBcNe5mLxKAaeJSmsFz0F2E7jd-SmO_v5o"
+    const val GOOGLE_API_KEY = "AIzaSyAqmUQWlawq-BNlBNPqMtOHz6Xv-Jprqfk"
 
     const val PROVIDER_INFO ="PROVIDER_INFO"
+
+    const val IS_LOGIN = "is_login"
+    const val APP_CONFIG = "app_config"
+    const val USER_DETAILS = "user_details"
+    const val GET_CONFIG = "Config"
+    const val USER = "Users"
 }

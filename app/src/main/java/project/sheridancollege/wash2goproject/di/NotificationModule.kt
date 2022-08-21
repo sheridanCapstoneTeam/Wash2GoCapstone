@@ -13,9 +13,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
-import project.sheridancollege.wash2goproject.ui.MainActivity
+import project.sheridancollege.wash2goproject.ui.authentication.MainActivity
 import project.sheridancollege.wash2goproject.R
-import project.sheridancollege.wash2goproject.util.Constants.ACTION_NAVIGATE_TO_MAPS_FRAGMENT
 import project.sheridancollege.wash2goproject.util.Constants.NOTIFICATION_CHANNEL_ID
 import project.sheridancollege.wash2goproject.util.Constants.PENDING_INTENT_REQUEST_CODE
 

@@ -5,13 +5,13 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
 
-    <fragment
+    <!--<fragment
         android:id="@+id/permissionFragment"
         android:name="project.sheridancollege.wash2goproject.ui.permission.PermissionFragment"
         android:label="fragment_permission"
         tools:layout="@layout/fragment_permission" >
-    </fragment>
-    <fragment
+    </fragment>-->
+    <!--<fragment
         android:id="@+id/mapsFragment"
         android:name="project.sheridancollege.wash2goproject.ui.maps.MapsFragment"
         android:label="fragment_maps"
@@ -24,23 +24,23 @@
         <action
             android:id="@+id/action_mapsFragment_to_permissionFragment"
             app:destination="@id/permissionFragment" />
-    </fragment>
+    </fragment>-->
     <fragment
         android:id="@+id/loginFragment"
-        android:name="project.sheridancollege.wash2goproject.ui.login.LoginFragment"
+        android:name="project.sheridancollege.wash2goproject.ui.authentication.LoginFragment"
         android:label="login_fragment"
         tools:layout="@layout/login_fragment" >
         <action
             android:id="@+id/action_loginFragment_to_registerActivity"
             app:destination="@id/registerFragment" />
-        <action
+        <!--<action
             android:id="@+id/action_loginFragment_to_mapsFragment"
-            app:destination="@id/mapsFragment" />
+            app:destination="@id/mapsFragment" />-->
     </fragment>
 
     <fragment
         android:id="@+id/registerFragment"
-        android:name="project.sheridancollege.wash2goproject.ui.register.RegisterFragment"
+        android:name="project.sheridancollege.wash2goproject.ui.authentication.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register"
         >

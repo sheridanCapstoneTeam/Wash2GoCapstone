@@ -1,4 +1,4 @@
-package project.sheridancollege.wash2goproject
+package project.sheridancollege.wash2goproject.common
 
 
 data class User (val userId: String="",

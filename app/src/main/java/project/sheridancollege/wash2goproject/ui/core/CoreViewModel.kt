@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import project.sheridancollege.wash2goproject.util.Constants
 import project.sheridancollege.wash2goproject.util.HTTPDataHandler
 
 class CoreViewModel : ViewModel() {
@@ -21,7 +22,7 @@ class CoreViewModel : ViewModel() {
                 try {
                     val http = HTTPDataHandler()
                     val url = String.format(
-                        "https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=AIzaSyBcNe5mLxKAaeJSmsFz0F2E7jd-SmO_v5o",
+                        "https://maps.googleapis.com/maps/api/geocode/json?address=%s&key="+Constants.GOOGLE_API_KEY,
                         address
                     )
                     response = http.getHTTPData(url)

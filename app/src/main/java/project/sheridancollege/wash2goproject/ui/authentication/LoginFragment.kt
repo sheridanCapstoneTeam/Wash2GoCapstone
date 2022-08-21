@@ -1,14 +1,10 @@
-package project.sheridancollege.wash2goproject.ui.login
+package project.sheridancollege.wash2goproject.ui.authentication
 
-import android.content.Context
+import android.app.ProgressDialog
 import android.content.Intent
-import android.content.SharedPreferences
 import android.location.Location
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -26,51 +23,52 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import project.sheridancollege.wash2goproject.AppClass
 import project.sheridancollege.wash2goproject.R
-import project.sheridancollege.wash2goproject.User
+import project.sheridancollege.wash2goproject.common.User
+import project.sheridancollege.wash2goproject.util.Constants
+import project.sheridancollege.wash2goproject.util.SharedPreferenceUtils
 
 
 class LoginFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = LoginFragment()
-    }
-
     private lateinit var mAuth: FirebaseAuth;
     lateinit var mGoogleSignInClient: GoogleSignInClient
     val Req_Code: Int = 123
-    private var rootDatabaseref: DatabaseReference? = null
 
-    private lateinit var viewModel: LoginViewModel
+    //private lateinit var viewModel: LoginViewModel
+    private lateinit var progressDialog: ProgressDialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        progressDialog = ProgressDialog(requireContext())
+        progressDialog.setTitle("Login")
+        progressDialog.setMessage("Please Wait...")
         return inflater.inflate(R.layout.login_fragment, container, false)
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
+        //viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
 
 
         val googleButton: Button = view.findViewById(R.id.btnGoogle)
         val btnLogin: Button = view.findViewById(R.id.btnLogin)
         val btn: TextView = view.findViewById(R.id.textViewSignup)
 
-        rootDatabaseref = FirebaseDatabase.getInstance().reference.child("email")
-
 
         btn.setOnClickListener {
-            val directions =
-                LoginFragmentDirections.actionLoginFragmentToRegisterActivity()
-            findNavController().navigate(directions)
+            findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToRegisterActivity())
         }
 
         btnLogin.setOnClickListener {
@@ -95,12 +93,12 @@ class LoginFragment : Fragment() {
         }
 
 
-        viewModel.coOrdinates.observe(viewLifecycleOwner) { response->
-            if(response!=null) {
+        /*viewModel.coOrdinates.observe(viewLifecycleOwner) { response ->
+            if (response != null) {
                 onPostExecute(response)
                 viewModel.resetResponse();
             }
-        }
+        }*/
     }
 
 
@@ -117,94 +115,63 @@ class LoginFragment : Fragment() {
             showError(password, "Password must be 7 character")
 
         } else {
+            progressDialog.show()
+
             mAuth.signInWithEmailAndPassword(inputEmail, inputPass)
                 .addOnCompleteListener { task: Task<AuthResult> ->
-                    if (task.isSuccessful) {
+                    if (!task.isSuccessful) {
 
-                        val userId = mAuth.currentUser?.uid
-                        userId?.apply {
-                            val userRefs = FirebaseDatabase.getInstance().getReference("USERS").child(userId)
-                            userRefs.addValueEventListener(object:ValueEventListener{
+                        dismissDialog()
+
+                        Toast.makeText(
+                            requireContext(), task.exception?.localizedMessage, Toast.LENGTH_LONG
+                        ).show()
+                        return@addOnCompleteListener
+                    }
+
+                    val userId = mAuth.currentUser?.uid
+                    userId?.apply {
+
+                        AppClass.databaseReference.child(Constants.USER).child(userId)
+                            .addValueEventListener(object : ValueEventListener {
                                 override fun onDataChange(snapshot: DataSnapshot) {
-                                    val user:User? = snapshot.getValue(User::class.java)
-                                    Log.d("LoginFragment",user.toString())
+                                    dismissDialog()
+                                    val user: User? = snapshot.getValue(User::class.java)
+                                    Log.e("LoginFragment", user.toString())
 
+                                    //viewModel.getCoOrdinates(user?.streetNum + "+" + user?.streetName)
 
-                                    viewModel.getCoOrdinates(user?.streetNum+"+"+user?.streetName)
+                                    SharedPreferenceUtils.saveUserDetails(user)
+                                    if(user!!.isProvider){
+                                        //Start detailer flow
+
+                                    }
+                                    else{
+                                        //Start customer flow
+
+                                    }
                                 }
 
                                 override fun onCancelled(error: DatabaseError) {
-
+                                    dismissDialog()
                                 }
 
                             })
-
-                        }
-
-
-
-
-
-
-
-
-
-
-                    } else {
-                        Toast.makeText(
-                            requireContext(), "sorry something went wrong!", Toast.LENGTH_LONG
-                        ).show()
                     }
-
                 }
         }
 
     }
 
+    private fun dismissDialog() {
+        if (progressDialog.isShowing) {
+            progressDialog.dismiss()
+        }
+    }
+
     private fun showError(input: EditText, s: String) {
         input.setError(s)
         input.requestFocus()
-    }
-
-    object SavedPreference {
-
-        const val EMAIL = "email"
-        const val USERNAME = "username"
-
-        private fun getSharedPreference(ctx: Context?): SharedPreferences? {
-            return PreferenceManager.getDefaultSharedPreferences(ctx)
-        }
-
-        private fun editor(context: Context, const: String, string: String) {
-            getSharedPreference(
-                context
-            )?.edit()?.putString(const, string)?.apply()
-        }
-
-        fun getEmail(context: Context) = getSharedPreference(
-            context
-        )?.getString(EMAIL, "")
-
-        fun setEmail(context: Context, email: String) {
-            editor(
-                context,
-                EMAIL,
-                email
-            )
-        }
-
-        fun setUsername(context: Context, username: String) {
-            editor(
-                context,
-                USERNAME,
-                username
-            )
-        }
-
-        fun getUsername(context: Context) = getSharedPreference(
-            context
-        )?.getString(USERNAME, "")
-
     }
 
     // signInGoogle() function
@@ -240,8 +207,8 @@ class LoginFragment : Fragment() {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         mAuth.signInWithCredential(credential).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                SavedPreference.setEmail(requireActivity(), account.email.toString())
-                SavedPreference.setUsername(requireActivity(), account.displayName.toString())
+                //SavedPreference.setEmail(requireActivity(), account.email.toString())
+                //SavedPreference.setUsername(requireActivity(), account.displayName.toString())
                 /* val intent = Intent(requireActivity(), MainActivity::class.java)
                  startActivity(intent)
                  finish()*/
@@ -258,46 +225,42 @@ class LoginFragment : Fragment() {
     }
 
 
+    private fun onPostExecute(s: String?) {
+        // binding.progressBar.visibility = View.GONE
+        var loc = Location("")
+        try {
+            val jsonObject = JSONObject(s)
+            val lat =
+                (jsonObject["results"] as JSONArray).getJSONObject(0).getJSONObject("geometry")
+                    .getJSONObject("location")["lat"].toString()
+            val lng =
+                (jsonObject["results"] as JSONArray).getJSONObject(0).getJSONObject("geometry")
+                    .getJSONObject("location")["lng"].toString()
+            // binding.txtCoordinates.setText(String.format("Coordinates : %s / %s ", lat, lng))
 
+            //Gettign the
+            loc.latitude = lat.toDouble()
+            loc.longitude = lng.toDouble()
+            val latloc = loc.latitude
+            val lngLoc = loc.longitude
+            loc = createNewLocation(latloc, lngLoc)
+            /*findNavController().navigate(
+                LoginFragmentDirections.actionLoginFragmentToMapsFragment(
+                    loc.latitude.toFloat(), loc.longitude.toFloat()
+                )
+            )*/
 
-
-
-
-private fun onPostExecute(s: String?) {
-   // binding.progressBar.visibility = View.GONE
-    var loc = Location("")
-    try {
-        val jsonObject = JSONObject(s)
-        val lat =
-            (jsonObject["results"] as JSONArray).getJSONObject(0).getJSONObject("geometry")
-                .getJSONObject("location")["lat"].toString()
-        val lng =
-            (jsonObject["results"] as JSONArray).getJSONObject(0).getJSONObject("geometry")
-                .getJSONObject("location")["lng"].toString()
-       // binding.txtCoordinates.setText(String.format("Coordinates : %s / %s ", lat, lng))
-
-        //Gettign the
-        loc.latitude = lat.toDouble()
-        loc.longitude = lng.toDouble()
-        val latloc = loc.latitude
-        val lngLoc = loc.longitude
-        loc = createNewLocation(latloc, lngLoc)
-        findNavController().navigate(
-            LoginFragmentDirections.actionLoginFragmentToMapsFragment(
-            loc.latitude.toFloat(), loc.longitude.toFloat()
-        ))
-
-    } catch (e: JSONException) {
-        e.printStackTrace()
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
     }
-}
 
-private fun createNewLocation(latitude: Double, longitude: Double): Location {
-    val location = Location("")
-    location.longitude = longitude
-    location.latitude = latitude
-    return location
-}
+    private fun createNewLocation(latitude: Double, longitude: Double): Location {
+        val location = Location("")
+        location.longitude = longitude
+        location.latitude = latitude
+        return location
+    }
 
 
 }
