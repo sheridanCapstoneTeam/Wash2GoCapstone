@@ -1,10 +1,13 @@
 package project.sheridancollege.wash2goproject.common
 
-import com.google.firebase.database.PropertyName
-
 data class Config(
-    var addOnsList: List<Any>,
     var servicesList: List<Any>,
-    var vehicleTypesList: List<Any>
+    var addOnsList: List<Any>,
+    var vehicleTypesList: List<Any>,
+    var baseServiceCharges: Int,
+    var baseAddOnsCharges: Int,
+    var cleaningSuppliesCharges: Int,
+    var cleaningSuppliesList: List<Any>,
+    var cleaningSuppliesMarketPrice: Int
 ) {
 }

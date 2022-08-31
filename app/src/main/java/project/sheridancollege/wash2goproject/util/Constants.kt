@@ -26,4 +26,5 @@ object Constants {
     const val USER_DETAILS = "user_details"
     const val GET_CONFIG = "Config"
     const val USER = "Users"
+    const val DETAILER_SERVICE_PRICE = "DetailerServicePrice"
 }

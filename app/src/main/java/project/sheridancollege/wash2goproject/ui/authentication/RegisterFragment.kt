@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import project.sheridancollege.wash2goproject.AppClass
 import project.sheridancollege.wash2goproject.R
 import project.sheridancollege.wash2goproject.common.User
+import project.sheridancollege.wash2goproject.common.UserStatus
 import project.sheridancollege.wash2goproject.databinding.FragmentRegisterBinding
 import project.sheridancollege.wash2goproject.util.Constants
 
@@ -133,7 +134,13 @@ class RegisterFragment : Fragment() {
                         inputStreetName,
                         inputCity,
                         inputPhone,
-                        isProvider
+                        isProvider,
+                        isSetupCompleted = false,
+                        haveCleaningKit = false,
+                        isCleaningKitReceive = false,
+                        status = UserStatus.OFFLINE,
+                        currenLat = 0.0,
+                        currentLong = 0.0
                     )
 
                     // Convert the location to corrdinates
@@ -169,6 +176,7 @@ class RegisterFragment : Fragment() {
             progressDialog.dismiss()
         }
     }
+
     private fun showError(input: EditText, s: String) {
         input.error = s
         input.requestFocus()

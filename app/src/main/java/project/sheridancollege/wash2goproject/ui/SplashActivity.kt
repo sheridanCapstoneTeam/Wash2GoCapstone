@@ -1,17 +1,21 @@
 package project.sheridancollege.wash2goproject.ui
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import com.google.firebase.database.*
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.gson.Gson
 import project.sheridancollege.wash2goproject.AppClass
 import project.sheridancollege.wash2goproject.R
 import project.sheridancollege.wash2goproject.common.Config
 import project.sheridancollege.wash2goproject.ui.authentication.MainActivity
+import project.sheridancollege.wash2goproject.ui.customer.CustomerActivity
+import project.sheridancollege.wash2goproject.ui.detailer.DetailerActivity
+import project.sheridancollege.wash2goproject.ui.detailer.setup.DetailerSetupActivity
 import project.sheridancollege.wash2goproject.util.Constants
+import project.sheridancollege.wash2goproject.util.Permission
 import project.sheridancollege.wash2goproject.util.SharedPreferenceUtils
 
 class SplashActivity : AppCompatActivity() {
@@ -19,44 +23,81 @@ class SplashActivity : AppCompatActivity() {
     companion object {
         val TAG: String = SplashActivity::class.java.simpleName
     }
-    private lateinit var valueEventListener:ValueEventListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        valueEventListener = AppClass.databaseReference.child(Constants.GET_CONFIG)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
+        AppClass.databaseReference.child(Constants.GET_CONFIG)
+            .get()
+            .addOnCompleteListener(OnCompleteListener { task ->
 
-                    val myConfig = Config(
-                        snapshot.child("Services").value.toString().split(","),
-                        snapshot.child("AddsOn").value.toString().split(","),
-                        snapshot.child("VehicleType").value.toString().split(",")
-                    )
-
-                    SharedPreferenceUtils.saveAppConfig(Gson().toJson(myConfig))
-                    Log.e(TAG, "Config json : " + SharedPreferenceUtils.getAppConfig())
-
-                    startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                    finish()
-
-                }
-
-                override fun onCancelled(error: DatabaseError) {
+                if (!task.isSuccessful) {
                     Toast.makeText(
                         this@SplashActivity,
                         "Unable to get configurations",
                         Toast.LENGTH_SHORT
                     ).show()
                     finish()
+                    return@OnCompleteListener
                 }
 
-            })
-    }
+                val myConfig = Config(
+                    task.result.child("Services").value.toString().split(","),
+                    task.result.child("AddsOn").value.toString().split(","),
+                    task.result.child("VehicleType").value.toString().split(","),
+                    Integer.parseInt(task.result.child("BaseServiceCharges").value.toString()),
+                    Integer.parseInt(task.result.child("BaseAddOnsCharges").value.toString()),
+                    Integer.parseInt(task.result.child("CleaningSuppliesCharges").value.toString()),
+                    task.result.child("CleaningSupplies").value.toString().split(","),
+                    Integer.parseInt(task.result.child("CleaningSuppliesMarketPrice").value.toString()),
+                )
+                SharedPreferenceUtils.saveAppConfig(Gson().toJson(myConfig))
+                Log.e(TAG, "Config json : " + SharedPreferenceUtils.getAppConfig())
 
-    override fun onStop() {
-        super.onStop()
-        AppClass.databaseReference.child(Constants.GET_CONFIG).removeEventListener(valueEventListener)
+                if (SharedPreferenceUtils.getIsUserLogin()) {
+                    if (SharedPreferenceUtils.getUserDetails().isProvider) {
+                        //Start Detailer activity
+                        if (!SharedPreferenceUtils.getUserDetails().isSetupCompleted ||
+                            !SharedPreferenceUtils.getUserDetails().haveCleaningKit ||
+                            !SharedPreferenceUtils.getUserDetails().isCleaningKitReceive ||
+                            !Permission.hasLocationPermission(this)
+                        ) {
+                            //Initital setup is not completed yet. Move to DetailerSetupActivity
+                            startActivity(
+                                Intent(
+                                    this@SplashActivity,
+                                    DetailerSetupActivity::class.java
+                                )
+                            )
+                        } else {
+                            //Initial Setup is done.
+                            startActivity(
+                                Intent(
+                                    this@SplashActivity,
+                                    DetailerActivity::class.java
+                                )
+                            )
+                        }
+                        finish()
+                        return@OnCompleteListener
+                    }
+
+
+                    //Start Customer Activity
+                    startActivity(
+                        Intent(
+                            this@SplashActivity,
+                            CustomerActivity::class.java
+                        )
+                    )
+                    finish()
+                    return@OnCompleteListener
+                }
+
+                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                finish()
+
+            })
     }
 }

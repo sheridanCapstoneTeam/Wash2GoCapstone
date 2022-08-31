@@ -19,20 +19,22 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import project.sheridancollege.wash2goproject.AppClass
 import project.sheridancollege.wash2goproject.R
 import project.sheridancollege.wash2goproject.common.User
+import project.sheridancollege.wash2goproject.ui.customer.CustomerActivity
+import project.sheridancollege.wash2goproject.ui.detailer.DetailerActivity
+import project.sheridancollege.wash2goproject.ui.detailer.setup.DetailerSetupActivity
 import project.sheridancollege.wash2goproject.util.Constants
+import project.sheridancollege.wash2goproject.util.Permission
 import project.sheridancollege.wash2goproject.util.SharedPreferenceUtils
 
 
@@ -132,30 +134,57 @@ class LoginFragment : Fragment() {
                     val userId = mAuth.currentUser?.uid
                     userId?.apply {
 
-                        AppClass.databaseReference.child(Constants.USER).child(userId)
-                            .addValueEventListener(object : ValueEventListener {
-                                override fun onDataChange(snapshot: DataSnapshot) {
-                                    dismissDialog()
-                                    val user: User? = snapshot.getValue(User::class.java)
-                                    Log.e("LoginFragment", user.toString())
-
-                                    //viewModel.getCoOrdinates(user?.streetNum + "+" + user?.streetName)
-
-                                    SharedPreferenceUtils.saveUserDetails(user)
-                                    if(user!!.isProvider){
-                                        //Start detailer flow
-
-                                    }
-                                    else{
-                                        //Start customer flow
-
-                                    }
+                        AppClass.databaseReference.child(Constants.USER)
+                            .child(userId)
+                            .get().addOnCompleteListener(OnCompleteListener { task ->
+                                dismissDialog()
+                                if (!task.isSuccessful) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        task.exception?.localizedMessage,
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    return@OnCompleteListener
                                 }
 
-                                override fun onCancelled(error: DatabaseError) {
-                                    dismissDialog()
-                                }
+                                val user: User? = task.result.getValue(User::class.java)
+                                Log.e("LoginFragment", user.toString())
 
+                                SharedPreferenceUtils.saveUserDetails(user)
+                                SharedPreferenceUtils.setIsUserLogin(true)
+                                if (user!!.isProvider) {
+                                    //Start detailer flow
+                                    if (!user.isSetupCompleted || !user.haveCleaningKit || !user.isCleaningKitReceive || !Permission.hasLocationPermission(
+                                            requireContext()
+                                        )
+                                    ) {
+                                        //Initital setup is not completed yet. Move to DetailerSetupActivity
+                                        startActivity(
+                                            Intent(
+                                                requireActivity(),
+                                                DetailerSetupActivity::class.java
+                                            )
+                                        )
+                                    } else {
+                                        //Initial Setup is done.
+                                        startActivity(
+                                            Intent(
+                                                requireActivity(),
+                                                DetailerActivity::class.java
+                                            )
+                                        )
+                                    }
+                                    requireActivity().finish()
+                                } else {
+                                    //Start customer flow
+                                    startActivity(
+                                        Intent(
+                                            requireActivity(),
+                                            CustomerActivity::class.java
+                                        )
+                                    )
+                                    requireActivity().finish()
+                                }
                             })
                     }
                 }
@@ -223,7 +252,6 @@ class LoginFragment : Fragment() {
              finish()
          }*/
     }
-
 
     private fun onPostExecute(s: String?) {
         // binding.progressBar.visibility = View.GONE

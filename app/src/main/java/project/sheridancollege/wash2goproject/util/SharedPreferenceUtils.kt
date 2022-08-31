@@ -37,7 +37,7 @@ object SharedPreferenceUtils {
     fun saveUserDetails(userDetails: User?){
         getInstance().edit().putString(Constants.USER_DETAILS,Gson().toJson(userDetails)).apply()
     }
-    fun getUserDetails(): User? {
+    fun getUserDetails(): User {
         return Gson().fromJson(
             getInstance().getString(Constants.USER_DETAILS, null),
             User::class.java

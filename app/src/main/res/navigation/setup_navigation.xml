@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/setup_navigation"
+    app:startDestination="@id/vehicleTypeFragment">
+
+    <fragment
+        android:id="@+id/vehicleTypeFragment"
+        android:name="project.sheridancollege.wash2goproject.ui.detailer.setup.VehicleTypeFragment"
+        android:label="vehicle_type_fragment"
+        tools:layout="@layout/fragment_vehicle_type">
+        <action
+            android:id="@+id/action_vehicleTypeToCleaningSupplies"
+            app:destination="@id/cleaningSuppliesFragment" />
+        <action
+            android:id="@+id/action_vehicleTypeToservicePrice"
+            app:destination="@id/servicePriceFragment" />
+
+        <action
+            android:id="@+id/action_vehicleTypeToCleaningKitReceived"
+            app:destination="@id/cleaningKitReceivedFragment" />
+
+        <action
+            android:id="@+id/action_vehicleTypeToPermissionFragment"
+            app:destination="@id/locationPermissionFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/servicePriceFragment"
+        android:name="project.sheridancollege.wash2goproject.ui.detailer.setup.ServicePriceFragment"
+        android:label="service_price_fragment"
+        tools:layout="@layout/fragment_service_price">
+
+        <action
+            android:id="@+id/action_servicePriceToAddOns"
+            app:destination="@id/addOnsFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addOnsFragment"
+        android:name="project.sheridancollege.wash2goproject.ui.detailer.setup.AddsOnFragment"
+        android:label="add_ons_fragment"
+        tools:layout="@layout/fragment_adds_on">
+        <action
+            android:id="@+id/action_addonsToCleaningSupplies"
+            app:destination="@id/cleaningSuppliesFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cleaningSuppliesFragment"
+        android:name="project.sheridancollege.wash2goproject.ui.detailer.setup.CleaningSuppliesFragment"
+        android:label="cleaning_supplies_fragment"
+        tools:layout="@layout/fragment_cleaning_supplies">
+
+        <action
+            android:id="@+id/action_cleaningSuppliesToReceived"
+            app:destination="@id/cleaningKitReceivedFragment" />
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/cleaningKitReceivedFragment"
+        android:name="project.sheridancollege.wash2goproject.ui.detailer.setup.CleaingKitReceivedFragment"
+        android:label="cleaning_kit_received_fragment"
+        tools:layout="@layout/fragment_cleaning_kit_received">
+        <action
+            android:id="@+id/action_cleaningKitFragmentToPermission"
+            app:destination="@id/locationPermissionFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/locationPermissionFragment"
+        android:name="project.sheridancollege.wash2goproject.ui.permission.PermissionFragment"
+        android:label="location_permission_fragment"
+        tools:layout="@layout/fragment_permission" />
+</navigation>

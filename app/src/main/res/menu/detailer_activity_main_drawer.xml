@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_action_home"
+            android:title="@string/menu_home" />
+        <item
+            android:id="@+id/nav_my_jobs"
+            android:icon="@drawable/ic_action_my_jobs"
+            android:title="@string/my_jobs" />
+
+        <item
+            android:id="@+id/nav_change_rates"
+            android:icon="@drawable/ic_action_update_price"
+            android:title="@string/update_charges" />
+        <item
+            android:id="@+id/nav_request_for_supplies"
+            android:icon="@drawable/ic_action_request_supplies"
+            android:title="@string/request_for_supplies" />
+
+
+        <item
+            android:id="@+id/nav_my_profile"
+            android:icon="@drawable/ic_action_account_circle"
+            android:title="@string/my_profile" />
+
+        <item
+            android:id="@+id/nav_feedback"
+            android:icon="@drawable/ic_action_feedback"
+            android:title="@string/feedback" />
+
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_action_logout"
+            android:title="@string/log_out" />
+    </group>
+</menu>

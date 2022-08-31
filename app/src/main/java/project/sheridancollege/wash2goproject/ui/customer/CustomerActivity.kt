@@ -1,0 +1,102 @@
+package project.sheridancollege.wash2goproject.ui.customer
+
+import android.content.Intent
+import android.os.Bundle
+import android.util.Log
+import android.view.Gravity
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.navigation.NavigationView
+import project.sheridancollege.wash2goproject.R
+import project.sheridancollege.wash2goproject.common.User
+import project.sheridancollege.wash2goproject.databinding.ActivityCustomerBinding
+import project.sheridancollege.wash2goproject.ui.authentication.MainActivity
+import project.sheridancollege.wash2goproject.ui.detailer.DetailerActivity
+import project.sheridancollege.wash2goproject.util.SharedPreferenceUtils
+
+class CustomerActivity : AppCompatActivity() {
+
+    companion object {
+        val TAG: String = CustomerActivity::class.java.simpleName
+    }
+
+    private lateinit var user: User
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var binding: ActivityCustomerBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        binding = ActivityCustomerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        setSupportActionBar(binding.appBarCustomer.toolbar)
+
+        val drawerLayout: DrawerLayout = binding.drawerLayout
+        val navView: NavigationView = binding.navView
+        val navController = findNavController(R.id.nav_host_fragment_content_customer)
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.nav_customer_home
+            ), drawerLayout
+        )
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        navView.setupWithNavController(navController)
+
+        user = SharedPreferenceUtils.getUserDetails()
+        setupNavMenu(navView)
+    }
+
+    private fun setupNavMenu(navView: NavigationView) {
+        val navViewHeader = navView.getHeaderView(0)
+        val userNameNav = navViewHeader.findViewById<TextView>(R.id.userNameNav)
+        val userEmailNav = navViewHeader.findViewById<TextView>(R.id.userEmailNav)
+        userNameNav.text = user.firstName + " " + user.lastName
+        userEmailNav.text = user.email
+
+
+        binding.navView.setNavigationItemSelectedListener { menuItem ->
+            val result = true
+
+            when (menuItem.itemId) {
+                R.id.nav_customer_logout -> {
+                    Log.e(DetailerActivity.TAG, "Logout clicked")
+                    if (binding.drawerLayout.isDrawerOpen(Gravity.START)) {
+                        binding.drawerLayout.closeDrawers()
+                    }
+                    user = SharedPreferenceUtils.getUserDetails()
+                    SharedPreferenceUtils.setIsUserLogin(false)
+                    SharedPreferenceUtils.saveUserDetails(User())
+                    startActivity(Intent(this@CustomerActivity, MainActivity::class.java))
+                    finish()
+
+                }
+
+            }
+
+            result
+        }
+    }
+
+    override fun onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(Gravity.START)) {
+            binding.drawerLayout.closeDrawers()
+            return
+        }
+        super.onBackPressed()
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_content_customer)
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+}

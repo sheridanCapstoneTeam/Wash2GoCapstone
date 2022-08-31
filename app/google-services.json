@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "942246488668",
-    "project_id": "wash2goproject",
-    "storage_bucket": "wash2goproject.appspot.com"
+    "project_number": "65615005873",
+    "project_id": "wash2gocapstone",
+    "storage_bucket": "wash2gocapstone.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:942246488668:android:df94317ef30ecb1d4c9499",
+        "mobilesdk_app_id": "1:65615005873:android:0dbeb967231064ecd03a90",
         "android_client_info": {
           "package_name": "project.sheridancollege.wash2goproject"
         }
       },
       "oauth_client": [
         {
-          "client_id": "942246488668-5ol72k6nt0t3ebv3o4upu6uaqr6c9r3v.apps.googleusercontent.com",
+          "client_id": "65615005873-m1n8jfvvnmn1lrqc75gh23f57cljjvht.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBBPUUaa4wm4h7dvkhzP4xaR-1MeePWmJ0"
+          "current_key": "AIzaSyAc248ZidSsGxnz-9pvkvl9ezuadv6_Xrs"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "942246488668-5ol72k6nt0t3ebv3o4upu6uaqr6c9r3v.apps.googleusercontent.com",
+              "client_id": "65615005873-m1n8jfvvnmn1lrqc75gh23f57cljjvht.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
