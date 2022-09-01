@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -14,6 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.gson.Gson
 import project.sheridancollege.wash2goproject.AppClass
 import project.sheridancollege.wash2goproject.R
+import project.sheridancollege.wash2goproject.common.AppEnum
 import project.sheridancollege.wash2goproject.common.User
 import project.sheridancollege.wash2goproject.databinding.FragmentCleaningKitReceivedBinding
 import project.sheridancollege.wash2goproject.util.Constants
@@ -91,7 +93,10 @@ class CleaingKitReceivedFragment : Fragment() {
                 Log.e(CleaningSuppliesFragment.TAG, "Updated User -> " + Gson().toJson(user))
 
 
-                findNavController().navigate(R.id.action_cleaningKitFragmentToPermission)
+                findNavController().navigate(
+                    R.id.action_cleaningKitFragmentToPermission,
+                    bundleOf("permissionFrom" to AppEnum.DETAILER)
+                )
             })
     }
 

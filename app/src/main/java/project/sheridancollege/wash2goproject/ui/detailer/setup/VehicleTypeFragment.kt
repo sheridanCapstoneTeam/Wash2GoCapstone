@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.gson.Gson
 import project.sheridancollege.wash2goproject.R
+import project.sheridancollege.wash2goproject.common.AppEnum
 import project.sheridancollege.wash2goproject.databinding.FragmentVehicleTypeBinding
 import project.sheridancollege.wash2goproject.ui.detailer.adapter.VehicleTypeAdapter
 import project.sheridancollege.wash2goproject.util.SharedPreferenceUtils
@@ -35,7 +36,10 @@ class VehicleTypeFragment : Fragment(), VehicleTypeListener {
                     findNavController().navigate(R.id.action_vehicleTypeToCleaningKitReceived)
                     return
                 }
-                findNavController().navigate(R.id.action_vehicleTypeToPermissionFragment)
+                findNavController().navigate(
+                    R.id.action_vehicleTypeToPermissionFragment,
+                    bundleOf("permissionFrom" to AppEnum.DETAILER)
+                )
                 return
             }
             findNavController().navigate(R.id.action_vehicleTypeToCleaningSupplies)

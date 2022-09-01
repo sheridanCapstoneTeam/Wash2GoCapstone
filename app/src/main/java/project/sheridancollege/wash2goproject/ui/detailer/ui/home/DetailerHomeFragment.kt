@@ -115,7 +115,7 @@ class DetailerHomeFragment : Fragment(), OnMapReadyCallback {
         }
 
         detailerHomeViewModel.userLocation.observe(viewLifecycleOwner) {
-            user.currenLat = it.lastLocation.latitude
+            user.currentLat = it.lastLocation.latitude
             user.currentLong = it.lastLocation.longitude
 
             SharedPreferenceUtils.saveUserDetails(user)

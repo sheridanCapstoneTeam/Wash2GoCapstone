@@ -139,7 +139,7 @@ class RegisterFragment : Fragment() {
                         haveCleaningKit = false,
                         isCleaningKitReceive = false,
                         status = UserStatus.OFFLINE,
-                        currenLat = 0.0,
+                        currentLat = 0.0,
                         currentLong = 0.0
                     )
 

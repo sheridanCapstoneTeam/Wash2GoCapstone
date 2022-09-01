@@ -6,9 +6,24 @@
     app:startDestination="@+id/nav_customer_home">
 
     <fragment
+        android:id="@+id/nav_customer_permission"
+        android:name="project.sheridancollege.wash2goproject.ui.permission.PermissionFragment"
+        android:label="Location Permission"
+        tools:layout="@layout/fragment_permission" >
+        <action
+            android:id="@+id/action_permissionToCustomerHome"
+            app:destination="@+id/nav_customer_home" />
+    </fragment>
+
+
+    <fragment
         android:id="@+id/nav_customer_home"
         android:name="project.sheridancollege.wash2goproject.ui.customer.ui.home.CustomerHomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_customer_home" />
+        tools:layout="@layout/fragment_customer_home">
+        <action
+            android:id="@+id/action_customerHomeToPermission"
+            app:destination="@+id/nav_customer_permission" />
+    </fragment>
 
 </navigation>

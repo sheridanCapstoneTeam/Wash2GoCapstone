@@ -15,7 +15,6 @@ data class User(
     var haveCleaningKit: Boolean = false,
     var isCleaningKitReceive: Boolean = false,
     var status: UserStatus = UserStatus.OFFLINE,
-    var currenLat: Double = 0.0,
+    var currentLat: Double = 0.0,
     var currentLong: Double = 0.0
-) {
-}
+)

@@ -6,8 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
+import project.sheridancollege.wash2goproject.R
+import project.sheridancollege.wash2goproject.common.AppEnum
 import project.sheridancollege.wash2goproject.databinding.FragmentPermissionBinding
 import project.sheridancollege.wash2goproject.ui.detailer.DetailerActivity
 import project.sheridancollege.wash2goproject.ui.detailer.setup.DetailerSetupActivity
@@ -17,6 +20,15 @@ class PermissionFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private var _binding: FragmentPermissionBinding? = null
     private val binding get() = _binding!!
+    private lateinit var PERMISSION_FROM: AppEnum
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        arguments?.let {
+            PERMISSION_FROM = it.get("permissionFrom") as AppEnum
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,7 +41,10 @@ class PermissionFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             requestLocationPermission(this)
         }
 
-        setupViews()
+        if (PERMISSION_FROM == AppEnum.DETAILER) {
+            setupViews()
+        }
+
         return binding.root
     }
 
@@ -58,8 +73,16 @@ class PermissionFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
-        startActivity(Intent(requireContext(), DetailerActivity::class.java))
-        requireActivity().finish()
+
+        when (PERMISSION_FROM) {
+            AppEnum.DETAILER -> {
+                startActivity(Intent(requireContext(), DetailerActivity::class.java))
+                requireActivity().finish()
+            }
+            AppEnum.CUSTOMER -> {
+                findNavController().navigate(R.id.action_permissionToCustomerHome)
+            }
+        }
     }
 
 

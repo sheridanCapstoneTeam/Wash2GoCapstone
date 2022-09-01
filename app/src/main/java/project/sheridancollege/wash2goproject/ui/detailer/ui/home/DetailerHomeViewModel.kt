@@ -41,7 +41,7 @@ class DetailerHomeViewModel : ViewModel() {
 
     fun updateCurrentLocation(locationResult: LocationResult) {
         val user = SharedPreferenceUtils.getUserDetails()
-        user.currenLat = locationResult.lastLocation.latitude
+        user.currentLat = locationResult.lastLocation.latitude
         user.currentLong = locationResult.lastLocation.longitude
 
         AppClass.databaseReference.child(Constants.USER).child(user.userId)
