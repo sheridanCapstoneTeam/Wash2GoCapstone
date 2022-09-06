@@ -24,7 +24,6 @@ class DetailerSetupActivity : AppCompatActivity() {
         })
 
         binding.logoutBtn.setOnClickListener(View.OnClickListener {
-            SharedPreferenceUtils.setIsUserLogin(false)
             SharedPreferenceUtils.saveUserDetails(User())
             startActivity(Intent(this@DetailerSetupActivity, MainActivity::class.java))
             finish()

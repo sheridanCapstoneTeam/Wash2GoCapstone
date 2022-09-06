@@ -14,8 +14,12 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 import project.sheridancollege.wash2goproject.AppClass
 import project.sheridancollege.wash2goproject.R
 import project.sheridancollege.wash2goproject.common.User
@@ -88,10 +92,7 @@ class DetailerActivity : AppCompatActivity() {
                     user = SharedPreferenceUtils.getUserDetails()
 
                     if (user.status == UserStatus.OFFLINE) {
-                        SharedPreferenceUtils.setIsUserLogin(false)
-                        SharedPreferenceUtils.saveUserDetails(User())
-                        startActivity(Intent(this@DetailerActivity, MainActivity::class.java))
-                        finish()
+                        doSignOutUser()
                     } else {
                         doLogoutWithOffline()
                     }
@@ -122,13 +123,25 @@ class DetailerActivity : AppCompatActivity() {
                     return@OnCompleteListener
                 }
 
-                SharedPreferenceUtils.setIsUserLogin(false)
+                doSignOutUser()
+            })
+    }
+
+    private fun doSignOutUser() {
+        AuthUI.getInstance().signOut(this@DetailerActivity)
+            .addOnCompleteListener(OnCompleteListener {
+                if(!it.isSuccessful){
+                    Toast.makeText(
+                        this@DetailerActivity,
+                        it.exception?.localizedMessage,
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return@OnCompleteListener
+                }
                 SharedPreferenceUtils.saveUserDetails(User())
                 startActivity(Intent(this@DetailerActivity, MainActivity::class.java))
                 finish()
             })
-
-
     }
 
 

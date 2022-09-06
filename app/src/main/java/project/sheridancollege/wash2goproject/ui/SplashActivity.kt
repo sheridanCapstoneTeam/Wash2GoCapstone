@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import project.sheridancollege.wash2goproject.AppClass
 import project.sheridancollege.wash2goproject.R
@@ -55,7 +56,9 @@ class SplashActivity : AppCompatActivity() {
                 SharedPreferenceUtils.saveAppConfig(Gson().toJson(myConfig))
                 Log.e(TAG, "Config json : " + SharedPreferenceUtils.getAppConfig())
 
-                if (SharedPreferenceUtils.getIsUserLogin()) {
+                FirebaseAuth.getInstance().currentUser?.let {
+                    //Not null
+                    Log.e(TAG, "Already logged in " + FirebaseAuth.getInstance().currentUser?.email)
                     if (SharedPreferenceUtils.getUserDetails().isProvider) {
                         //Start Detailer activity
                         if (!SharedPreferenceUtils.getUserDetails().isSetupCompleted ||
@@ -93,10 +96,13 @@ class SplashActivity : AppCompatActivity() {
                     )
                     finish()
                     return@OnCompleteListener
+                } ?: kotlin.run {
+                    //Null
+                    Log.e(TAG, "Not logged in")
+                    startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                    finish()
                 }
 
-                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                finish()
 
             })
     }

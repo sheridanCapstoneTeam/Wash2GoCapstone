@@ -151,7 +151,6 @@ class LoginFragment : Fragment() {
                                 Log.e("LoginFragment", user.toString())
 
                                 SharedPreferenceUtils.saveUserDetails(user)
-                                SharedPreferenceUtils.setIsUserLogin(true)
                                 if (user!!.isProvider) {
                                     //Start detailer flow
                                     if (!user.isSetupCompleted || !user.haveCleaningKit || !user.isCleaningKitReceive || !Permission.hasLocationPermission(

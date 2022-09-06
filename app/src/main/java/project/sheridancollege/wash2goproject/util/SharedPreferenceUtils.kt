@@ -15,14 +15,6 @@ object SharedPreferenceUtils {
         return AppClass.instance.getSharedPreferences("mSharedPref", Activity.MODE_PRIVATE)
     }
 
-    fun setIsUserLogin(isLogin: Boolean) {
-        getInstance().edit().putBoolean(Constants.IS_LOGIN, isLogin).apply()
-    }
-
-    fun getIsUserLogin(): Boolean {
-        return getInstance().getBoolean(Constants.IS_LOGIN, false);
-    }
-
     fun saveAppConfig(appConfig: String) {
         getInstance().edit().putString(Constants.APP_CONFIG, appConfig).apply()
     }

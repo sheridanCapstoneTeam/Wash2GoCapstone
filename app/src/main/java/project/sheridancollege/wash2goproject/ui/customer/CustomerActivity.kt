@@ -1,10 +1,12 @@
 package project.sheridancollege.wash2goproject.ui.customer
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -12,6 +14,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.navigation.NavigationView
 import project.sheridancollege.wash2goproject.R
 import project.sheridancollege.wash2goproject.common.User
@@ -72,12 +76,7 @@ class CustomerActivity : AppCompatActivity() {
                     if (binding.drawerLayout.isDrawerOpen(Gravity.START)) {
                         binding.drawerLayout.closeDrawers()
                     }
-                    user = SharedPreferenceUtils.getUserDetails()
-                    SharedPreferenceUtils.setIsUserLogin(false)
-                    SharedPreferenceUtils.saveUserDetails(User())
-                    startActivity(Intent(this@CustomerActivity, MainActivity::class.java))
-                    finish()
-
+                    doSignOutUser()
                 }
 
             }
@@ -85,6 +84,24 @@ class CustomerActivity : AppCompatActivity() {
             result
         }
     }
+
+    private fun doSignOutUser() {
+        AuthUI.getInstance().signOut(this@CustomerActivity)
+            .addOnCompleteListener(OnCompleteListener {
+                if (!it.isSuccessful) {
+                    Toast.makeText(
+                        this,
+                        it.exception?.localizedMessage,
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return@OnCompleteListener
+                }
+                SharedPreferenceUtils.saveUserDetails(User())
+                startActivity(Intent(this@CustomerActivity, MainActivity::class.java))
+                finish()
+            })
+    }
+
 
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerOpen(Gravity.START)) {
