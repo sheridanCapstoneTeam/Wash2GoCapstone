@@ -70,6 +70,7 @@ class AddsOnFragment : Fragment() {
 
         val detailerServicePrice = DetailerServicesPrice(
             Integer.parseInt(binding.addonsPriceEt.text.toString()),
+            5,
             servicePriceList
         )
 

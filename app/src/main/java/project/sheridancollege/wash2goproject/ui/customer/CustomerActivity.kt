@@ -1,6 +1,5 @@
 package project.sheridancollege.wash2goproject.ui.customer
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log

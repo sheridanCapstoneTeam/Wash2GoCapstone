@@ -4,4 +4,5 @@ data class ServicePrice(
     var type: String,
     var price: Int
 ) {
+    constructor() : this("", 0)
 }

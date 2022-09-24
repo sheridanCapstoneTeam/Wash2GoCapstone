@@ -52,6 +52,7 @@ class SplashActivity : AppCompatActivity() {
                     Integer.parseInt(task.result.child("CleaningSuppliesCharges").value.toString()),
                     task.result.child("CleaningSupplies").value.toString().split(","),
                     Integer.parseInt(task.result.child("CleaningSuppliesMarketPrice").value.toString()),
+                    task.result.child("CarConditionImages").value.toString()
                 )
                 SharedPreferenceUtils.saveAppConfig(Gson().toJson(myConfig))
                 Log.e(TAG, "Config json : " + SharedPreferenceUtils.getAppConfig())

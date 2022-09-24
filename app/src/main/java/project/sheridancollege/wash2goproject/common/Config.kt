@@ -8,6 +8,7 @@ data class Config(
     var baseAddOnsCharges: Int,
     var cleaningSuppliesCharges: Int,
     var cleaningSuppliesList: List<Any>,
-    var cleaningSuppliesMarketPrice: Int
+    var cleaningSuppliesMarketPrice: Int,
+    var carConditionImagesList: String
 ) {
 }

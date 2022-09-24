@@ -2,6 +2,8 @@ package project.sheridancollege.wash2goproject.common
 
 data class DetailerServicesPrice(
     val addsOnCharges: Int,
-    val serviceAndPriceList: List<ServicePrice>
+    val rating: Int,
+    val serviceAndPriceList: ArrayList<ServicePrice>
 ) {
+    constructor() : this(0, 0, ArrayList())
 }

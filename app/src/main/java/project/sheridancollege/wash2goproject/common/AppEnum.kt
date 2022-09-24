@@ -2,5 +2,12 @@ package project.sheridancollege.wash2goproject.common
 
 enum class AppEnum {
     DETAILER,
-    CUSTOMER
+    CUSTOMER,
+
+    NEW,
+    ACTIVE,
+    STARTED,
+    ARRIVED,
+    COMPLETED,
+    DECLINED
 }

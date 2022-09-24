@@ -9,7 +9,7 @@
         android:id="@+id/nav_customer_permission"
         android:name="project.sheridancollege.wash2goproject.ui.permission.PermissionFragment"
         android:label="Location Permission"
-        tools:layout="@layout/fragment_permission" >
+        tools:layout="@layout/fragment_permission">
         <action
             android:id="@+id/action_permissionToCustomerHome"
             app:destination="@+id/nav_customer_home" />
@@ -24,6 +24,35 @@
         <action
             android:id="@+id/action_customerHomeToPermission"
             app:destination="@+id/nav_customer_permission" />
+
+        <action
+            android:id="@+id/action_go_to_schedule"
+            app:destination="@+id/nav_customer_schedule_appointment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_customer_schedule_appointment"
+        android:name="project.sheridancollege.wash2goproject.ui.customer.ui.order.ScheduleAppointmentFragment"
+        android:label="Schedule Appointment"
+        tools:layout="@layout/fragment_schedule_appointment">
+        <action
+            android:id="@+id/action_go_to_order_review"
+            app:destination="@+id/nav_customer_order_review" />
+
+        <action
+            android:id="@+id/action_go_back_to_home"
+            app:destination="@+id/nav_customer_home" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/nav_customer_order_review"
+        android:name="project.sheridancollege.wash2goproject.ui.customer.ui.order.OrderReviewFragment"
+        android:label="Order Review"
+        tools:layout="@layout/fragment_order_review">
+        <action
+            android:id="@+id/action_go_back_to_home"
+            app:destination="@+id/nav_customer_home" />
     </fragment>
 
 </navigation>
