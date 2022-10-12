@@ -122,9 +122,7 @@ class LoginFragment : Fragment() {
             mAuth.signInWithEmailAndPassword(inputEmail, inputPass)
                 .addOnCompleteListener { task: Task<AuthResult> ->
                     if (!task.isSuccessful) {
-
                         dismissDialog()
-
                         Toast.makeText(
                             requireContext(), task.exception?.localizedMessage, Toast.LENGTH_LONG
                         ).show()

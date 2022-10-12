@@ -9,5 +9,10 @@ enum class AppEnum {
     STARTED,
     ARRIVED,
     COMPLETED,
-    DECLINED
+    DECLINED,
+
+    USER_REQUEST,
+    DETAILER_REQUEST
+
+
 }

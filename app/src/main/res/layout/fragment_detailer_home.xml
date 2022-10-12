@@ -85,7 +85,7 @@
                     android:gravity="center"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="1"
+                    android:text="0"
                     android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
                     android:textColor="@color/blue_700"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -140,7 +140,7 @@
                     android:gravity="center"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="1"
+                    android:text="0"
                     android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
                     android:textColor="@color/blue_700"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -253,7 +253,6 @@
                     android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
                     app:layout_constraintBottom_toTopOf="@+id/ratingBar"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_chainStyle="packed" />
@@ -280,7 +279,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
-                    android:text="100$"
+                    android:text="0$"
                     android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                     android:textColor="@android:color/holo_green_dark"
                     app:layout_constraintBottom_toBottomOf="@+id/total_earning_label"
@@ -352,7 +351,7 @@
                     android:gravity="center"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="3"
+                    android:text="0"
                     android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
                     android:textColor="@color/blue_700"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -370,6 +369,13 @@
             android:layout_height="wrap_content"
             android:visibility="visible"
             app:constraint_referenced_ids="cardView,cardView3,cardView4,cardView1,cardView2" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/online_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:constraint_referenced_ids="cardView1,cardView2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

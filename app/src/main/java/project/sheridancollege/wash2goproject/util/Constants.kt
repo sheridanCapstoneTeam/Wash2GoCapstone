@@ -2,6 +2,10 @@ package project.sheridancollege.wash2goproject.util
 
 object Constants {
 
+    const val FCM_URL = "https://fcm.googleapis.com/fcm/send"
+    const val SERVER_KEY = "key=AAAAD0b1iLE:APA91bHUxpq2YrY4FQ1DZgU1gl0pyghNlh6GPDYDcntXdSLwAtQvUK2XCxQZBpj19JHgFDyywDyfw2UkKd9QoMYnk7BkptNl1yp2W0Dj7MdsEzq3keluJj_IDLJqduYhpKnKjyR2wlkU"
+
+
     const val PERMISSION_LOCATION_REQUEST_CODE = 1
     const val PERMISSION_BACKGROUND_LOCATION_CODE = 2
 
@@ -29,5 +33,8 @@ object Constants {
     const val ORDER = "Orders"
     const val IS_PROVIDER = "provider"
     const val DETAILER_SERVICE_PRICE = "DetailerServicePrice"
+
+
+
 
 }

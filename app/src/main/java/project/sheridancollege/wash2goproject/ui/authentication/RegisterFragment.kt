@@ -124,6 +124,7 @@ class RegisterFragment : Fragment() {
                     //add user to the realtime database
                     var currentUserId = mAuth.currentUser?.uid.toString()
 
+
                     //Add the user to User table
                     val user = User(
                         currentUserId,

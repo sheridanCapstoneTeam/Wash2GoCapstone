@@ -19,10 +19,14 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.gson.Gson
 import project.sheridancollege.wash2goproject.R
+import project.sheridancollege.wash2goproject.common.AppEnum
+import project.sheridancollege.wash2goproject.common.Order
 import project.sheridancollege.wash2goproject.common.User
 import project.sheridancollege.wash2goproject.common.UserStatus
 import project.sheridancollege.wash2goproject.databinding.FragmentDetailerHomeBinding
+import project.sheridancollege.wash2goproject.ui.customer.ui.home.CustomerHomeFragment
 import project.sheridancollege.wash2goproject.util.SharedPreferenceUtils
 
 @Suppress("DEPRECATION")
@@ -42,13 +46,14 @@ class DetailerHomeFragment : Fragment(), OnMapReadyCallback {
     private var locationUpdateState = false
     private lateinit var user: User
     private lateinit var locationCallback: LocationCallback
+    private lateinit var detailerHomeViewModel: DetailerHomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val detailerHomeViewModel =
+        detailerHomeViewModel =
             ViewModelProvider(this).get(DetailerHomeViewModel::class.java)
 
         _binding = FragmentDetailerHomeBinding.inflate(inflater, container, false)
@@ -80,6 +85,14 @@ class DetailerHomeFragment : Fragment(), OnMapReadyCallback {
 
         user = SharedPreferenceUtils.getUserDetails()
 
+
+        if(user.fcmToken == "N/A"){
+            detailerHomeViewModel.user.observe(viewLifecycleOwner){
+                user = it
+                SharedPreferenceUtils.saveUserDetails(user)
+            }
+            detailerHomeViewModel.updateFCMToken()
+        }
 
         when (user.status) {
             UserStatus.ONLINE -> {
@@ -122,21 +135,79 @@ class DetailerHomeFragment : Fragment(), OnMapReadyCallback {
         }
 
 
-
         return root
     }
 
+    private fun loadDashboardData() {
+        Log.e(TAG,"loadDashboardData")
+        binding.helloTitleTv.text = "Hello ${user.firstName} !"
+
+        detailerHomeViewModel.detailerServicePrice.observe(viewLifecycleOwner) {
+            binding.ratingBar.rating = it.rating.toFloat()
+            binding.ratingTv.text = "(${it.rating.toFloat()})"
+            binding.totalEarningTv.text = "${it.totalEarning}$"
+        }
+        detailerHomeViewModel.getRatingAndEarnings(user.userId)
+
+
+        detailerHomeViewModel.orders.observe(viewLifecycleOwner) {
+
+            var activeJobs = 0
+            var newJobs = 0
+            var completedJobs = 0
+            var declinedJobs = 0
+
+            if (it == null) {
+                binding.activeCountTv.text = activeJobs.toString()
+                binding.newCountTv.text = newJobs.toString()
+                binding.completeCountTv.text = completedJobs.toString()
+                binding.cancelCountTv.text = declinedJobs.toString()
+                return@observe
+            }
+            it.forEach{
+                    (key, value) ->
+
+                when(value["status"]){
+                    AppEnum.NEW.toString() -> {
+                        newJobs++
+                    }
+                    AppEnum.ACTIVE.toString() -> {
+                        activeJobs++
+                    }
+                    AppEnum.COMPLETED.toString() -> {
+                        completedJobs++
+                    }
+                    AppEnum.DECLINED.toString() -> {
+                        declinedJobs++
+                    }
+                }
+            }
+
+            binding.activeCountTv.text = activeJobs.toString()
+            binding.newCountTv.text = newJobs.toString()
+            binding.completeCountTv.text = completedJobs.toString()
+            binding.cancelCountTv.text = declinedJobs.toString()
+
+        }
+        detailerHomeViewModel.getDetailerOrders(user.userId)
+
+    }
+
     private fun goOnline() {
+        loadDashboardData()
         startLocationRequest()
         binding.offlineGroup.visibility = View.GONE
+        binding.onlineGroup.visibility = View.VISIBLE
         binding.widgetsView.setBackgroundColor(requireContext().getColor(android.R.color.transparent))
         binding.statusBtn.setBackgroundColor(requireContext().getColor(android.R.color.holo_red_dark))
         binding.statusBtn.text = "Go Offline"
     }
 
     private fun goOffline() {
+        loadDashboardData()
         stopLocationUpdates()
         binding.offlineGroup.visibility = View.VISIBLE
+        binding.onlineGroup.visibility = View.VISIBLE
         binding.widgetsView.setBackgroundColor(requireContext().getColor(R.color.blue_500_transparent))
         binding.statusBtn.setBackgroundColor(requireContext().getColor(android.R.color.holo_green_dark))
         binding.statusBtn.text = "Go Online"

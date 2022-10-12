@@ -12,11 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
-import project.sheridancollege.wash2goproject.AppClass
 import project.sheridancollege.wash2goproject.R
 import project.sheridancollege.wash2goproject.common.Order
 import project.sheridancollege.wash2goproject.common.User
 import project.sheridancollege.wash2goproject.databinding.FragmentOrderReviewBinding
+import project.sheridancollege.wash2goproject.firebase.FCMHandler
 import project.sheridancollege.wash2goproject.util.SharedPreferenceUtils
 
 class OrderReviewFragment : Fragment() {
@@ -91,9 +91,9 @@ class OrderReviewFragment : Fragment() {
             orderReviewViewModel.insertOrder(order)
         })
 
-        orderReviewViewModel.orderResult.observe(viewLifecycleOwner){
-            if(progressDialog.isShowing)progressDialog.dismiss()
-            Toast.makeText(requireContext(),"Order saved successfully!",Toast.LENGTH_SHORT).show()
+        orderReviewViewModel.orderResult.observe(viewLifecycleOwner) {
+            if (progressDialog.isShowing) progressDialog.dismiss()
+            Toast.makeText(requireContext(), "Order saved successfully!", Toast.LENGTH_SHORT).show()
             findNavController().navigate(R.id.action_go_back_to_home)
         }
 

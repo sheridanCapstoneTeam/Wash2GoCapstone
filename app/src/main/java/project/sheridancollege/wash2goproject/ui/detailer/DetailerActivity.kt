@@ -9,6 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -26,6 +27,7 @@ import project.sheridancollege.wash2goproject.common.User
 import project.sheridancollege.wash2goproject.common.UserStatus
 import project.sheridancollege.wash2goproject.databinding.ActivityDetailerBinding
 import project.sheridancollege.wash2goproject.ui.authentication.MainActivity
+import project.sheridancollege.wash2goproject.ui.detailer.ui.home.DetailerHomeViewModel
 import project.sheridancollege.wash2goproject.util.Constants
 import project.sheridancollege.wash2goproject.util.SharedPreferenceUtils
 
@@ -35,13 +37,13 @@ class DetailerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailerBinding
     private lateinit var user: User
     private lateinit var progressDialog: ProgressDialog
-
     companion object {
         val TAG: String = DetailerActivity::class.java.simpleName
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
         binding = ActivityDetailerBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -91,11 +93,7 @@ class DetailerActivity : AppCompatActivity() {
                     }
                     user = SharedPreferenceUtils.getUserDetails()
 
-                    if (user.status == UserStatus.OFFLINE) {
-                        doSignOutUser()
-                    } else {
-                        doLogoutWithOffline()
-                    }
+                    doLogoutWithOffline()
 
                 }
 
@@ -110,6 +108,7 @@ class DetailerActivity : AppCompatActivity() {
         progressDialog.show()
 
         user.status = UserStatus.OFFLINE
+        user.fcmToken = "N/A"
         AppClass.databaseReference.child(Constants.USER).child(user.userId)
             .setValue(user)
             .addOnCompleteListener(OnCompleteListener { task ->

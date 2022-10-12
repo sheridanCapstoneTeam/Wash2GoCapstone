@@ -16,5 +16,6 @@ data class User(
     var isCleaningKitReceive: Boolean = false,
     var status: UserStatus = UserStatus.OFFLINE,
     var currentLat: Double = 0.0,
-    var currentLong: Double = 0.0
+    var currentLong: Double = 0.0,
+    var fcmToken: String = "N/A"
 )
