@@ -119,22 +119,6 @@ class DetailerHomeViewModel : ViewModel() {
                     Toast.makeText(AppClass.instance, error.message, Toast.LENGTH_SHORT)
                 }
             })
-
-//        AppClass.databaseReference.child(Constants.ORDER)
-//            .child(detailerId)
-//            .get()
-//            .addOnCompleteListener(OnCompleteListener {
-//                if (!it.isSuccessful) {
-//                    Toast.makeText(
-//                        AppClass.instance,
-//                        "Unable to update dashboard",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                    return@OnCompleteListener
-//                }
-//                _orders.postValue(it.result.value as HashMap<String, HashMap<String, String>>?)
-//
-//            })
     }
 
 
