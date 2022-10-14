@@ -27,6 +27,7 @@ import project.sheridancollege.wash2goproject.common.User
 import project.sheridancollege.wash2goproject.common.UserStatus
 import project.sheridancollege.wash2goproject.databinding.FragmentDetailerHomeBinding
 import project.sheridancollege.wash2goproject.ui.customer.ui.home.CustomerHomeFragment
+import project.sheridancollege.wash2goproject.ui.detailer.bottomsheet.JobBottomSheetFragment
 import project.sheridancollege.wash2goproject.util.SharedPreferenceUtils
 
 @Suppress("DEPRECATION")
@@ -47,6 +48,11 @@ class DetailerHomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var user: User
     private lateinit var locationCallback: LocationCallback
     private lateinit var detailerHomeViewModel: DetailerHomeViewModel
+    private var jobBottomSheetFragment: JobBottomSheetFragment? = null
+    private  var activeJobList: ArrayList<Order> = ArrayList()
+    private  var newJobList: ArrayList<Order> = ArrayList()
+    private  var completedJobList: ArrayList<Order> =  ArrayList()
+    private  var declinedJobList: ArrayList<Order> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -134,12 +140,30 @@ class DetailerHomeFragment : Fragment(), OnMapReadyCallback {
             SharedPreferenceUtils.saveUserDetails(user)
         }
 
+        binding.cardView1.setOnClickListener(View.OnClickListener {
+            jobBottomSheetFragment = JobBottomSheetFragment.newInstance(activeJobList,AppEnum.ACTIVE.toString())
+            jobBottomSheetFragment?.show(childFragmentManager,"JobBottomSheet")
+        })
+        binding.cardView2.setOnClickListener(View.OnClickListener {
+            jobBottomSheetFragment = JobBottomSheetFragment.newInstance(newJobList,AppEnum.NEW.toString())
+            jobBottomSheetFragment?.show(childFragmentManager,"JobBottomSheet")
+        })
+        binding.cardView3.setOnClickListener(View.OnClickListener {
+            jobBottomSheetFragment = JobBottomSheetFragment.newInstance(completedJobList,AppEnum.COMPLETED.toString())
+            jobBottomSheetFragment?.show(childFragmentManager,"JobBottomSheet")
+        })
+        binding.cardView4.setOnClickListener(View.OnClickListener {
+            jobBottomSheetFragment = JobBottomSheetFragment.newInstance(declinedJobList,AppEnum.DECLINED.toString())
+            jobBottomSheetFragment?.show(childFragmentManager,"JobBottomSheet")
+        })
+
 
         return root
     }
 
     private fun loadDashboardData() {
         Log.e(TAG,"loadDashboardData")
+
         binding.helloTitleTv.text = "Hello ${user.firstName} !"
 
         detailerHomeViewModel.detailerServicePrice.observe(viewLifecycleOwner) {
@@ -152,42 +176,43 @@ class DetailerHomeFragment : Fragment(), OnMapReadyCallback {
 
         detailerHomeViewModel.orders.observe(viewLifecycleOwner) {
 
-            var activeJobs = 0
-            var newJobs = 0
-            var completedJobs = 0
-            var declinedJobs = 0
+            if(jobBottomSheetFragment !=null && jobBottomSheetFragment?.isVisible!!){
+                jobBottomSheetFragment?.dismiss()
+            }
 
-            if (it == null) {
-                binding.activeCountTv.text = activeJobs.toString()
-                binding.newCountTv.text = newJobs.toString()
-                binding.completeCountTv.text = completedJobs.toString()
-                binding.cancelCountTv.text = declinedJobs.toString()
+            activeJobList.clear()
+            newJobList.clear()
+            completedJobList.clear()
+            declinedJobList.clear()
+
+            if (it.isNullOrEmpty()) {
+                binding.activeCountTv.text = activeJobList.size.toString()
+                binding.newCountTv.text = newJobList.size.toString()
+                binding.completeCountTv.text = completedJobList.size.toString()
+                binding.cancelCountTv.text = declinedJobList.size.toString()
                 return@observe
             }
-            it.forEach{
-                    (key, value) ->
 
-                when(value["status"]){
+            for(order in it){
+                when(order.status) {
                     AppEnum.NEW.toString() -> {
-                        newJobs++
+                        newJobList.add(order)
                     }
                     AppEnum.ACTIVE.toString() -> {
-                        activeJobs++
+                        activeJobList.add(order)
                     }
                     AppEnum.COMPLETED.toString() -> {
-                        completedJobs++
+                        completedJobList.add(order)
                     }
                     AppEnum.DECLINED.toString() -> {
-                        declinedJobs++
+                        declinedJobList.add(order)
                     }
                 }
             }
-
-            binding.activeCountTv.text = activeJobs.toString()
-            binding.newCountTv.text = newJobs.toString()
-            binding.completeCountTv.text = completedJobs.toString()
-            binding.cancelCountTv.text = declinedJobs.toString()
-
+            binding.activeCountTv.text = activeJobList.size.toString()
+            binding.newCountTv.text = newJobList.size.toString()
+            binding.completeCountTv.text = completedJobList.size.toString()
+            binding.cancelCountTv.text = declinedJobList.size.toString()
         }
         detailerHomeViewModel.getDetailerOrders(user.userId)
 

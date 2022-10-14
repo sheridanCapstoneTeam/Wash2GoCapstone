@@ -33,8 +33,8 @@ class DetailerHomeViewModel : ViewModel() {
     private val _detailerServicePrice: MutableLiveData<DetailerServicesPrice> = MutableLiveData()
     val detailerServicePrice: LiveData<DetailerServicesPrice> = _detailerServicePrice
 
-    private val _orders: MutableLiveData<HashMap<String,HashMap<String,String>>> = MutableLiveData()
-    val orders: LiveData<HashMap<String,HashMap<String,String>>> = _orders
+    private val _orders: MutableLiveData<ArrayList<Order>> = MutableLiveData()
+    val orders: LiveData<ArrayList<Order>> = _orders
 
     fun updateFCMToken(){
         val user = SharedPreferenceUtils.getUserDetails()
@@ -112,7 +112,16 @@ class DetailerHomeViewModel : ViewModel() {
             .child(detailerId)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    _orders.postValue(snapshot.value as HashMap<String, HashMap<String, String>>?)
+
+                    val list: ArrayList<Order> = ArrayList()
+                    for(child in snapshot.children){
+                        val order: Order? =
+                            child.getValue(
+                                Order::class.java
+                            )
+                        list.add(order!!)
+                    }
+                    _orders.postValue(list)
                 }
 
                 override fun onCancelled(error: DatabaseError) {

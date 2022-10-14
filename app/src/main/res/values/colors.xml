@@ -13,6 +13,7 @@
     <color name ="colorPrimaryDark">#3262c4</color>
     <color name="colorRed">#c11515</color>
     <color name="grey">#EE989898</color>
+    <color name="green">#EE989898</color>
 
     <color name="blue_500_transparent">#6D00719E</color>
 </resources>
