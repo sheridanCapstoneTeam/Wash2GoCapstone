@@ -49,7 +49,7 @@ class CustomerHomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerC
     private lateinit var lastLocation: Location
     private lateinit var locationRequest: LocationRequest
     private var locationUpdateState = false
-    private lateinit var user: User
+    private var user: User?=null
     private lateinit var locationCallback: LocationCallback
     val markerList: ArrayList<MarkerOptions> = ArrayList()
     private lateinit var customerHomeViewModel: CustomerHomeViewModel
@@ -117,7 +117,7 @@ class CustomerHomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerC
 
         user = SharedPreferenceUtils.getUserDetails()
 
-        if(user.fcmToken == "N/A"){
+        if(user?.fcmToken == "N/A"){
             customerHomeViewModel.user.observe(viewLifecycleOwner){
                 user = it
                 SharedPreferenceUtils.saveUserDetails(user)

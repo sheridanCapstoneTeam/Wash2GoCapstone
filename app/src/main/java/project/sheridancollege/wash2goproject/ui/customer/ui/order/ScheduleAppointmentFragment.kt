@@ -35,7 +35,7 @@ class ScheduleAppointmentFragment : Fragment() {
     private lateinit var binding: FragmentScheduleAppointmentBinding
     private lateinit var detailerId: String
     private lateinit var detailerServicesPrice: DetailerServicesPrice
-    private lateinit var user: User
+    private var user: User? = null
     private var price: Int = 0
     private lateinit var customerLocation: Location
     private var config: Config? = null
@@ -136,7 +136,7 @@ class ScheduleAppointmentFragment : Fragment() {
             //Proceed with order
             val order = Order(
                 detailerId = detailerId,
-                customerId = user.userId,
+                customerId = user?.userId.toString(),
                 orderDateTime = binding.orderDateTimeTv.text.toString(),
                 addOnsInclude = binding.addsonCheckBox.isChecked,
                 carType = binding.dropDownMenu.text.toString(),

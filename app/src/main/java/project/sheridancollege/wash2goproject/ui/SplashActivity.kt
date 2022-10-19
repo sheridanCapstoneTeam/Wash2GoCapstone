@@ -60,11 +60,11 @@ class SplashActivity : AppCompatActivity() {
                 FirebaseAuth.getInstance().currentUser?.let {
                     //Not null
                     Log.e(TAG, "Already logged in " + FirebaseAuth.getInstance().currentUser?.email)
-                    if (SharedPreferenceUtils.getUserDetails().isProvider) {
+                    if (SharedPreferenceUtils.getUserDetails()?.isProvider!!) {
                         //Start Detailer activity
-                        if (!SharedPreferenceUtils.getUserDetails().isSetupCompleted ||
-                            !SharedPreferenceUtils.getUserDetails().haveCleaningKit ||
-                            !SharedPreferenceUtils.getUserDetails().isCleaningKitReceive ||
+                        if (SharedPreferenceUtils.getUserDetails()?.isSetupCompleted == false ||
+                            SharedPreferenceUtils.getUserDetails()?.haveCleaningKit == false ||
+                            SharedPreferenceUtils.getUserDetails()?.isCleaningKitReceive == false ||
                             !Permission.hasLocationPermission(this)
                         ) {
                             //Initital setup is not completed yet. Move to DetailerSetupActivity

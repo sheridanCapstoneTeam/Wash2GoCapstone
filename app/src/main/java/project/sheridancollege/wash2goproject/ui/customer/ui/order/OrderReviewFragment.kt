@@ -23,7 +23,7 @@ class OrderReviewFragment : Fragment() {
 
     private lateinit var binding: FragmentOrderReviewBinding
     private lateinit var order: Order
-    private lateinit var user: User
+    private var user: User? = null
     private lateinit var orderReviewViewModel: OrderReviewViewModel
     private lateinit var progressDialog: ProgressDialog
 
@@ -63,7 +63,7 @@ class OrderReviewFragment : Fragment() {
 
 
         user = SharedPreferenceUtils.getUserDetails()
-        binding.customerName.text = user.firstName + " " + user.lastName
+        binding.customerName.text = user?.firstName + " " + user?.lastName
         binding.orderNumber.text = order.orderId
         binding.orderDate.text = order.orderDateTime.split(" ")[0]
         binding.orderTime.text = order.orderDateTime.split(" ")[1]

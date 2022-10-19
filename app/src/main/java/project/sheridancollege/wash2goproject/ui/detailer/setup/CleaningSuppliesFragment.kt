@@ -70,10 +70,10 @@ class CleaningSuppliesFragment : Fragment() {
 
         progressDialog.show()
 
-        val user: User = SharedPreferenceUtils.getUserDetails()
-        user.haveCleaningKit = true
+        val user: User? = SharedPreferenceUtils.getUserDetails()
+        user?.haveCleaningKit = true
 
-        AppClass.databaseReference.child(Constants.USER).child(user.userId)
+        AppClass.databaseReference.child(Constants.USER).child(user?.userId.toString())
             .setValue(user)
             .addOnCompleteListener(OnCompleteListener { task ->
 

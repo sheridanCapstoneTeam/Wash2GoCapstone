@@ -33,7 +33,7 @@ class CustomerActivity : AppCompatActivity() {
         val TAG: String = CustomerActivity::class.java.simpleName
     }
 
-    private lateinit var user: User
+    private var user: User? = null
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityCustomerBinding
     private lateinit var progressDialog: ProgressDialog
@@ -70,8 +70,8 @@ class CustomerActivity : AppCompatActivity() {
         val navViewHeader = navView.getHeaderView(0)
         val userNameNav = navViewHeader.findViewById<TextView>(R.id.userNameNav)
         val userEmailNav = navViewHeader.findViewById<TextView>(R.id.userEmailNav)
-        userNameNav.text = user.firstName + " " + user.lastName
-        userEmailNav.text = user.email
+        userNameNav.text = user?.firstName + " " + user?.lastName
+        userEmailNav.text = user?.email
 
 
         binding.navView.setNavigationItemSelectedListener { menuItem ->
@@ -97,8 +97,8 @@ class CustomerActivity : AppCompatActivity() {
 
         progressDialog.show()
 
-        user.fcmToken = "N/A"
-        AppClass.databaseReference.child(Constants.USER).child(user.userId)
+        user?.fcmToken = "N/A"
+        AppClass.databaseReference.child(Constants.USER).child(user?.userId.toString())
             .setValue(user)
             .addOnCompleteListener(OnCompleteListener { task ->
                 progressDialog.dismiss()

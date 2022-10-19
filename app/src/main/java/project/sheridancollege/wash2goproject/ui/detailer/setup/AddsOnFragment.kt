@@ -76,7 +76,7 @@ class AddsOnFragment : Fragment() {
         )
 
         AppClass.databaseReference.child(Constants.DETAILER_SERVICE_PRICE)
-            .child(SharedPreferenceUtils.getUserDetails().userId)
+            .child(SharedPreferenceUtils.getUserDetails()?.userId.toString())
             .setValue(detailerServicePrice)
             .addOnCompleteListener(OnCompleteListener { task ->
 
@@ -90,18 +90,18 @@ class AddsOnFragment : Fragment() {
                     return@OnCompleteListener
                 }
 
-                val user: User = SharedPreferenceUtils.getUserDetails()
-                user.isSetupCompleted = true
+                val user: User? = SharedPreferenceUtils.getUserDetails()
+                user?.isSetupCompleted = true
 
                 AppClass.databaseReference.child(Constants.USER)
-                    .child(SharedPreferenceUtils.getUserDetails().userId)
+                    .child(SharedPreferenceUtils.getUserDetails()?.userId.toString())
                     .setValue(user)
                     .addOnCompleteListener(OnCompleteListener { task ->
                         progressDialog.dismiss()
                         if (!task.isSuccessful) {
 
                             AppClass.databaseReference.child(Constants.DETAILER_SERVICE_PRICE)
-                                .child(SharedPreferenceUtils.getUserDetails().userId)
+                                .child(SharedPreferenceUtils.getUserDetails()?.userId.toString())
                                 .removeValue()
 
                             Toast.makeText(

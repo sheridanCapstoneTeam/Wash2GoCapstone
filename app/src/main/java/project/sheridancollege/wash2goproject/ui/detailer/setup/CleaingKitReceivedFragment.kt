@@ -71,10 +71,10 @@ class CleaingKitReceivedFragment : Fragment() {
     private fun doVerifyCode() {
         progressDialog.show()
 
-        var user: User = SharedPreferenceUtils.getUserDetails()
-        user.isCleaningKitReceive = true
+        var user: User? = SharedPreferenceUtils.getUserDetails()
+        user?.isCleaningKitReceive = true
 
-        AppClass.databaseReference.child(Constants.USER).child(user.userId)
+        AppClass.databaseReference.child(Constants.USER).child(user?.userId.toString())
             .setValue(user)
             .addOnCompleteListener(OnCompleteListener { task ->
                 progressDialog.dismiss()

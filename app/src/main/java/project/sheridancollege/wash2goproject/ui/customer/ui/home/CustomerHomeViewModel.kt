@@ -32,9 +32,9 @@ class CustomerHomeViewModel : ViewModel() {
 
     fun updateFCMToken() {
         val user = SharedPreferenceUtils.getUserDetails()
-        user.fcmToken = AppClass.FCMToken
+        user?.fcmToken = AppClass.FCMToken
 
-        AppClass.databaseReference.child(Constants.USER).child(user.userId)
+        AppClass.databaseReference.child(Constants.USER).child(user?.userId.toString())
             .setValue(user)
             .addOnCompleteListener(OnCompleteListener { task ->
                 if (!task.isSuccessful) {

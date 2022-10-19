@@ -37,9 +37,9 @@ class DetailerHomeViewModel : ViewModel() {
 
     fun updateFCMToken() {
         val user = SharedPreferenceUtils.getUserDetails()
-        user.fcmToken = AppClass.FCMToken
+        user?.fcmToken = AppClass.FCMToken
 
-        AppClass.databaseReference.child(Constants.USER).child(user.userId)
+        AppClass.databaseReference.child(Constants.USER).child(user?.userId.toString())
             .setValue(user)
             .addOnCompleteListener(OnCompleteListener { task ->
                 if (!task.isSuccessful) {
@@ -54,10 +54,10 @@ class DetailerHomeViewModel : ViewModel() {
 
     fun updateUserStatus(userStatus: UserStatus) {
         val user = SharedPreferenceUtils.getUserDetails()
-        user.status = userStatus
+        user?.status = userStatus
 
 
-        AppClass.databaseReference.child(Constants.USER).child(user.userId)
+        AppClass.databaseReference.child(Constants.USER).child(user?.userId.toString())
             .setValue(user)
             .addOnCompleteListener(OnCompleteListener { task ->
                 if (!task.isSuccessful) {
@@ -74,10 +74,10 @@ class DetailerHomeViewModel : ViewModel() {
 
     fun updateCurrentLocation(locationResult: LocationResult) {
         val user = SharedPreferenceUtils.getUserDetails()
-        user.currentLat = locationResult.lastLocation.latitude
-        user.currentLong = locationResult.lastLocation.longitude
+        user?.currentLat = locationResult.lastLocation.latitude
+        user?.currentLong = locationResult.lastLocation.longitude
 
-        AppClass.databaseReference.child(Constants.USER).child(user.userId)
+        AppClass.databaseReference.child(Constants.USER).child(user?.userId.toString())
             .setValue(user)
             .addOnCompleteListener(OnCompleteListener { task ->
                 if (!task.isSuccessful) {

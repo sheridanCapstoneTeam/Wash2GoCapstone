@@ -3,7 +3,7 @@ package project.sheridancollege.wash2goproject.util
 object Constants {
 
     const val FCM_URL = "https://fcm.googleapis.com/fcm/send"
-    const val SERVER_KEY = "key=AAAAD0b1iLE:APA91bHUxpq2YrY4FQ1DZgU1gl0pyghNlh6GPDYDcntXdSLwAtQvUK2XCxQZBpj19JHgFDyywDyfw2UkKd9QoMYnk7BkptNl1yp2W0Dj7MdsEzq3keluJj_IDLJqduYhpKnKjyR2wlkU"
+    const val SERVER_KEY = "key=AAAA22JEalw:APA91bEhqauDIxGhqGjVFgpDpgKoYLCUqAqolBZwkWMzV9WAWLcpdeuyK87qVj3P0B17XJC9f4emdjPUX1kpLe4jgC6DOtqZJlocEwBg4Q22kF5i0MVxEMFge3F3uhsCKOJaSzExtGZp"
 
 
     const val PERMISSION_LOCATION_REQUEST_CODE = 1
@@ -21,7 +21,7 @@ object Constants {
 
     const val LOCATION_UPDATE_INTERVAL = 4000
     const val LOCATION_FASTEST_UPDATE_INTERVAL = 2000
-    const val GOOGLE_API_KEY = "AIzaSyAqmUQWlawq-BNlBNPqMtOHz6Xv-Jprqfk"
+    const val GOOGLE_API_KEY = "AIzaSyDy_9Q4kSmyr42US9ApC4o5zX5st9Xx3KE"
 
     const val PROVIDER_INFO ="PROVIDER_INFO"
 

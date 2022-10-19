@@ -30,9 +30,9 @@ class VehicleTypeFragment : Fragment(), VehicleTypeListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (SharedPreferenceUtils.getUserDetails().isSetupCompleted) {
-            if (SharedPreferenceUtils.getUserDetails().haveCleaningKit) {
-                if (!SharedPreferenceUtils.getUserDetails().isCleaningKitReceive) {
+        if (SharedPreferenceUtils.getUserDetails()?.isSetupCompleted == true) {
+            if (SharedPreferenceUtils.getUserDetails()?.haveCleaningKit == true) {
+                if (SharedPreferenceUtils.getUserDetails()?.isCleaningKitReceive == false) {
                     findNavController().navigate(R.id.action_vehicleTypeToCleaningKitReceived)
                     return
                 }

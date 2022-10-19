@@ -47,7 +47,7 @@ class DetailerHomeFragment : Fragment(), OnMapReadyCallback, BottomSheetClickLis
     private lateinit var lastLocation: Location
     private lateinit var locationRequest: LocationRequest
     private var locationUpdateState = false
-    private lateinit var user: User
+    private var user: User? = null
     private lateinit var locationCallback: LocationCallback
     private lateinit var detailerHomeViewModel: DetailerHomeViewModel
     private var jobBottomSheetFragment: JobBottomSheetFragment? = null
@@ -95,7 +95,7 @@ class DetailerHomeFragment : Fragment(), OnMapReadyCallback, BottomSheetClickLis
         user = SharedPreferenceUtils.getUserDetails()
 
 
-        if(user.fcmToken == "N/A"){
+        if(user?.fcmToken == "N/A"){
             detailerHomeViewModel.user.observe(viewLifecycleOwner){
                 user = it
                 SharedPreferenceUtils.saveUserDetails(user)
@@ -103,7 +103,7 @@ class DetailerHomeFragment : Fragment(), OnMapReadyCallback, BottomSheetClickLis
             detailerHomeViewModel.updateFCMToken()
         }
 
-        when (user.status) {
+        when (user?.status) {
             UserStatus.ONLINE -> {
                 goOnline()
             }
@@ -128,8 +128,8 @@ class DetailerHomeFragment : Fragment(), OnMapReadyCallback, BottomSheetClickLis
         }
 
         detailerHomeViewModel.userLocation.observe(viewLifecycleOwner) {
-            user.currentLat = it.lastLocation.latitude
-            user.currentLong = it.lastLocation.longitude
+            user?.currentLat = it.lastLocation.latitude
+            user?.currentLong = it.lastLocation.longitude
 
             SharedPreferenceUtils.saveUserDetails(user)
         }
@@ -168,7 +168,7 @@ class DetailerHomeFragment : Fragment(), OnMapReadyCallback, BottomSheetClickLis
     override fun onClick(view: View?) {
         when(view?.id){
             R.id.status_btn -> {
-                when (user.status) {
+                when (user?.status) {
                     UserStatus.ONLINE -> {
                         detailerHomeViewModel.updateUserStatus(UserStatus.OFFLINE)
                     }
@@ -196,19 +196,19 @@ class DetailerHomeFragment : Fragment(), OnMapReadyCallback, BottomSheetClickLis
             }
 
             R.id.acceptBtn -> {
-                detailerHomeViewModel.updateOrderStatus(order,user.userId,AppEnum.ACTIVE)
+                detailerHomeViewModel.updateOrderStatus(order,user?.userId.toString(),AppEnum.ACTIVE)
             }
             R.id.declineBtn -> {
-                detailerHomeViewModel.updateOrderStatus(order,user.userId,AppEnum.DECLINED)
+                detailerHomeViewModel.updateOrderStatus(order,user?.userId.toString(),AppEnum.DECLINED)
             }
             R.id.startBtn -> {
-                detailerHomeViewModel.updateOrderStatus(order,user.userId,AppEnum.STARTED)
+                detailerHomeViewModel.updateOrderStatus(order,user?.userId.toString(),AppEnum.STARTED)
             }
             R.id.arriveBtn -> {
-                detailerHomeViewModel.updateOrderStatus(order,user.userId,AppEnum.ARRIVED)
+                detailerHomeViewModel.updateOrderStatus(order,user?.userId.toString(),AppEnum.ARRIVED)
             }
             R.id.finishBtn -> {
-                detailerHomeViewModel.updateOrderStatus(order,user.userId,AppEnum.COMPLETED)
+                detailerHomeViewModel.updateOrderStatus(order,user?.userId.toString(),AppEnum.COMPLETED)
             }
         }
     }
@@ -216,14 +216,14 @@ class DetailerHomeFragment : Fragment(), OnMapReadyCallback, BottomSheetClickLis
     private fun loadDashboardData() {
         Log.e(TAG,"loadDashboardData")
 
-        binding.helloTitleTv.text = "Hello ${user.firstName} !"
+        binding.helloTitleTv.text = "Hello ${user?.firstName} !"
 
         detailerHomeViewModel.detailerServicePrice.observe(viewLifecycleOwner) {
             binding.ratingBar.rating = it.rating.toFloat()
             binding.ratingTv.text = "(${it.rating.toFloat()})"
             binding.totalEarningTv.text = "${it.totalEarning}$"
         }
-        detailerHomeViewModel.getRatingAndEarnings(user.userId)
+        detailerHomeViewModel.getRatingAndEarnings(user?.userId.toString())
 
 
         detailerHomeViewModel.orders.observe(viewLifecycleOwner) {
@@ -268,7 +268,7 @@ class DetailerHomeFragment : Fragment(), OnMapReadyCallback, BottomSheetClickLis
             binding.completeCountTv.text = completedJobList.size.toString()
             binding.cancelCountTv.text = declinedJobList.size.toString()
         }
-        detailerHomeViewModel.getDetailerOrders(user.userId)
+        detailerHomeViewModel.getDetailerOrders(user?.userId.toString())
 
     }
 
@@ -350,7 +350,7 @@ class DetailerHomeFragment : Fragment(), OnMapReadyCallback, BottomSheetClickLis
 
     override fun onResume() {
         super.onResume()
-        if (locationUpdateState && user.status == UserStatus.ONLINE) {
+        if (locationUpdateState && user?.status == UserStatus.ONLINE) {
             startLocationUpdates()
         }
     }
@@ -389,7 +389,7 @@ class DetailerHomeFragment : Fragment(), OnMapReadyCallback, BottomSheetClickLis
     }
 
     override fun OrderViewBtnClick(order: Order) {
-        if(user.status == UserStatus.OFFLINE){
+        if(user?.status == UserStatus.OFFLINE){
             Toast.makeText(requireContext(),"Please go online first!",Toast.LENGTH_SHORT).show()
             return
         }
