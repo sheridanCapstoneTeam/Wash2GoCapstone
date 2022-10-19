@@ -27,8 +27,10 @@
 
         <Button
             android:id="@+id/status_btn"
-            android:layout_width="379dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="24dp"
             android:backgroundTint="@android:color/holo_green_dark"
             android:paddingTop="10dp"
@@ -39,8 +41,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toBottomOf="@+id/orderStatusBtnsLyt" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView2"
@@ -362,6 +363,117 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/orderStatusBtnsLyt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@android:color/transparent"
+            android:padding="10dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/status_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintVertical_chainStyle="packed">
+
+            <Button
+                android:id="@+id/acceptBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:backgroundTint="@android:color/holo_green_dark"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="ACCEPT"
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/declineBtn"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/declineBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:backgroundTint="@android:color/holo_red_light"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="DECLINE"
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/startBtn"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/acceptBtn"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/startBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:backgroundTint="@color/blue_500"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="START JOB"
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/arriveBtn"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/declineBtn"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/arriveBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:backgroundTint="@color/blue_500"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="I AM HERE"
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/finishBtn"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/startBtn"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/finishBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:backgroundTint="@color/blue_500"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="COMPLETE JOB"
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/arriveBtn"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/acceptDeclineGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:constraint_referenced_ids="acceptBtn,declineBtn"
+                tools:layout_editor_absoluteX="10dp"
+                tools:layout_editor_absoluteY="10dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/offline_group"

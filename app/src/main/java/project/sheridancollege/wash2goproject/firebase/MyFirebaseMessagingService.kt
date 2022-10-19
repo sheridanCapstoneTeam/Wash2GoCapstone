@@ -29,20 +29,24 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         Log.e(TAG, "New Token : $token")
         AppClass.FCMToken = token
 
-        val user = SharedPreferenceUtils.getUserDetails()
-        user.fcmToken = AppClass.FCMToken
 
-        AppClass.databaseReference.child(Constants.USER).child(user.userId)
-            .setValue(user)
-            .addOnCompleteListener(OnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Toast.makeText(
-                        AppClass.instance, task.exception?.localizedMessage, Toast.LENGTH_LONG
-                    ).show()
-                    return@OnCompleteListener
-                }
-                Log.e(TAG,"FCM token udpated successfully on firebase")
-            })
+        val user = SharedPreferenceUtils.getUserDetails()
+        if(user != null){
+            user.fcmToken = AppClass.FCMToken
+
+            AppClass.databaseReference.child(Constants.USER).child(user.userId)
+                .setValue(user)
+                .addOnCompleteListener(OnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        Toast.makeText(
+                            AppClass.instance, task.exception?.localizedMessage, Toast.LENGTH_LONG
+                        ).show()
+                        return@OnCompleteListener
+                    }
+                    Log.e(TAG,"FCM token udpated successfully on firebase")
+                })
+        }
+
 
     }
 

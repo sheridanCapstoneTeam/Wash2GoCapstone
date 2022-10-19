@@ -1,5 +1,6 @@
 package project.sheridancollege.wash2goproject.ui.customer
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -16,11 +17,14 @@ import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.navigation.NavigationView
+import project.sheridancollege.wash2goproject.AppClass
 import project.sheridancollege.wash2goproject.R
 import project.sheridancollege.wash2goproject.common.User
+import project.sheridancollege.wash2goproject.common.UserStatus
 import project.sheridancollege.wash2goproject.databinding.ActivityCustomerBinding
 import project.sheridancollege.wash2goproject.ui.authentication.MainActivity
 import project.sheridancollege.wash2goproject.ui.detailer.DetailerActivity
+import project.sheridancollege.wash2goproject.util.Constants
 import project.sheridancollege.wash2goproject.util.SharedPreferenceUtils
 
 class CustomerActivity : AppCompatActivity() {
@@ -32,6 +36,7 @@ class CustomerActivity : AppCompatActivity() {
     private lateinit var user: User
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityCustomerBinding
+    private lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +59,9 @@ class CustomerActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        progressDialog = ProgressDialog(this@CustomerActivity)
+        progressDialog.setMessage("Please wait...")
+
         user = SharedPreferenceUtils.getUserDetails()
         setupNavMenu(navView)
     }
@@ -75,13 +83,36 @@ class CustomerActivity : AppCompatActivity() {
                     if (binding.drawerLayout.isDrawerOpen(Gravity.START)) {
                         binding.drawerLayout.closeDrawers()
                     }
-                    doSignOutUser()
+                    doLogoutWithFCMUpdate()
                 }
 
             }
 
             result
         }
+    }
+
+
+    private fun doLogoutWithFCMUpdate() {
+
+        progressDialog.show()
+
+        user.fcmToken = "N/A"
+        AppClass.databaseReference.child(Constants.USER).child(user.userId)
+            .setValue(user)
+            .addOnCompleteListener(OnCompleteListener { task ->
+                progressDialog.dismiss()
+                if (!task.isSuccessful) {
+                    Toast.makeText(
+                        this@CustomerActivity,
+                        task.exception?.localizedMessage,
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return@OnCompleteListener
+                }
+
+                doSignOutUser()
+            })
     }
 
     private fun doSignOutUser() {

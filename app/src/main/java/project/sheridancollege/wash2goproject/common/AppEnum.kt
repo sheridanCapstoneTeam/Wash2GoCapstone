@@ -11,7 +11,7 @@ enum class AppEnum {
     COMPLETED,
     DECLINED,
 
-    USER_REQUEST,
+    CUSTOMER_REQUEST,
     DETAILER_REQUEST
 
 

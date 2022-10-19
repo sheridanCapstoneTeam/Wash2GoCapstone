@@ -74,7 +74,7 @@ class PermissionFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
 
-        when (PERMISSION_FROM) {
+        when(PERMISSION_FROM) {
             AppEnum.DETAILER -> {
                 startActivity(Intent(requireContext(), DetailerActivity::class.java))
                 requireActivity().finish()
@@ -82,6 +82,7 @@ class PermissionFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             AppEnum.CUSTOMER -> {
                 findNavController().navigate(R.id.action_permissionToCustomerHome)
             }
+            else -> {}
         }
     }
 

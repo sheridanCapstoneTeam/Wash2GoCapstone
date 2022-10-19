@@ -12,6 +12,7 @@ import project.sheridancollege.wash2goproject.common.AppEnum
 import project.sheridancollege.wash2goproject.common.Order
 import project.sheridancollege.wash2goproject.databinding.LayoutJobBottomSheetBinding
 import project.sheridancollege.wash2goproject.ui.detailer.adapter.OrderAdapter
+import project.sheridancollege.wash2goproject.ui.detailer.ui.home.BottomSheetClickListener
 
 class JobBottomSheetFragment : BottomSheetDialogFragment() {
 
@@ -20,9 +21,11 @@ class JobBottomSheetFragment : BottomSheetDialogFragment() {
 
         fun newInstance(
             jobList: ArrayList<Order>,
-            jobType: String
+            jobType: String,
+            bottomSheetClickListener: BottomSheetClickListener
         ): JobBottomSheetFragment {
             return JobBottomSheetFragment().apply {
+                this.bottomSheetClickListener = bottomSheetClickListener
                 this.arguments = Bundle().apply {
                     putString("jobType", jobType)
                     putSerializable("jobList", jobList)
@@ -32,12 +35,19 @@ class JobBottomSheetFragment : BottomSheetDialogFragment() {
 
     }
 
-
     private var _binding: LayoutJobBottomSheetBinding? = null
     private val binding get() = _binding!!
     private lateinit var jobType: String
     private lateinit var jobList: ArrayList<Order>
     private lateinit var orderAdapter: OrderAdapter
+    private lateinit var bottomSheetClickListener: BottomSheetClickListener
+
+    private var itemClickListener = object : ItemClickListener {
+        override fun OrderViewBtnClick(order: Order) {
+            bottomSheetClickListener.OrderViewBtnClick(order)
+            dismiss()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,8 +94,10 @@ class JobBottomSheetFragment : BottomSheetDialogFragment() {
             binding.notFoundGroup.visibility = View.GONE
             binding.jobRv.visibility = View.VISIBLE
 
-            orderAdapter = OrderAdapter(jobList)
+            orderAdapter = OrderAdapter(jobList, itemClickListener)
             binding.jobRv.adapter = orderAdapter
+
+
         }
     }
 
@@ -93,4 +105,8 @@ class JobBottomSheetFragment : BottomSheetDialogFragment() {
         dismiss()
     }
 
+}
+
+interface ItemClickListener {
+    fun OrderViewBtnClick(order: Order)
 }

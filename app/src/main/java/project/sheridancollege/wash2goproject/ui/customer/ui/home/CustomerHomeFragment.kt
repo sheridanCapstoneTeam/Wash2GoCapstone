@@ -116,6 +116,15 @@ class CustomerHomeFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerC
         }
 
         user = SharedPreferenceUtils.getUserDetails()
+
+        if(user.fcmToken == "N/A"){
+            customerHomeViewModel.user.observe(viewLifecycleOwner){
+                user = it
+                SharedPreferenceUtils.saveUserDetails(user)
+            }
+            customerHomeViewModel.updateFCMToken()
+        }
+
         createLocationRequest()
 
         customerHomeViewModel.getOnlineDetailers()

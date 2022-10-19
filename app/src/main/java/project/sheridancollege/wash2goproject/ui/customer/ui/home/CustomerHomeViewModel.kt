@@ -14,6 +14,7 @@ import project.sheridancollege.wash2goproject.common.DetailerServicesPrice
 import project.sheridancollege.wash2goproject.common.User
 import project.sheridancollege.wash2goproject.common.UserStatus
 import project.sheridancollege.wash2goproject.util.Constants
+import project.sheridancollege.wash2goproject.util.SharedPreferenceUtils
 
 class CustomerHomeViewModel : ViewModel() {
 
@@ -24,6 +25,27 @@ class CustomerHomeViewModel : ViewModel() {
 
     private val _detailerServicePrice: MutableLiveData<DetailerServicesPrice> = MutableLiveData()
     val detailerServicePrice: LiveData<DetailerServicesPrice> = _detailerServicePrice
+
+    private val _user: MutableLiveData<User> = MutableLiveData()
+    val user: LiveData<User> = _user
+
+
+    fun updateFCMToken() {
+        val user = SharedPreferenceUtils.getUserDetails()
+        user.fcmToken = AppClass.FCMToken
+
+        AppClass.databaseReference.child(Constants.USER).child(user.userId)
+            .setValue(user)
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Toast.makeText(
+                        AppClass.instance, task.exception?.localizedMessage, Toast.LENGTH_LONG
+                    ).show()
+                    return@OnCompleteListener
+                }
+                _user.postValue(user)
+            })
+    }
 
     fun getOnlineDetailers() {
         valueEventListener = AppClass.databaseReference
